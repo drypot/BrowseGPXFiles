@@ -25,7 +25,7 @@ public enum GPXUtils {
     }
 
     public static func makeGPXSegment(from polyline: MKPolyline) -> GPXSegment {
-        var segment = GPXSegment()
+        let segment = GPXSegment()
         let count = polyline.pointCount
         let pointer = polyline.points()
         for i in 0..<count {
@@ -39,7 +39,7 @@ public enum GPXUtils {
     public static func makeGPXTracks(from polylines: Set<MKPolyline>) -> [GPXTrack] {
         var tracks = [GPXTrack]()
         for polyline in polylines {
-            var track = GPXTrack()
+            let track = GPXTrack()
             let segment = Self.makeGPXSegment(from: polyline)
             track.segments.append(segment)
             tracks.append(track)

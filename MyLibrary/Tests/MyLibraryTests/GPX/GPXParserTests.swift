@@ -13,7 +13,7 @@ struct GPXParserTests {
 
     typealias XMLError = BasicXMLParser.XMLError
 
-    static let gpx = {
+    nonisolated(unsafe) static let gpx = {
         let data = Data(gpxSampleManual.utf8)
         do {
             return try GPXParser().parse(data)

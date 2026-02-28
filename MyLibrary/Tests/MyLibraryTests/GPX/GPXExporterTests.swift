@@ -11,7 +11,7 @@ import Testing
 
 struct GPXExporterTests {
 
-    static let gpx: GPX = {
+    nonisolated(unsafe) static let gpx: GPX = {
         let data = Data(gpxSampleManualMultiple.utf8)
         do {
             return try GPXParser().parse(data)

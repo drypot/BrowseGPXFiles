@@ -11,7 +11,7 @@ import MapKit
 // 참고
 // https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/Coordinate.swift
 
-public struct GPX: Sendable {
+public final class GPX {
     public var creator: String = ""
     public var version: String = ""
     public var metadata: GPXMetadata = .init()
@@ -22,7 +22,7 @@ public struct GPX: Sendable {
     public init() {}
 }
 
-public struct GPXMetadata: Sendable {
+public final class GPXMetadata {
     public var name: String = ""
     public var description: String = ""
     //public var author
@@ -35,7 +35,7 @@ public struct GPXMetadata: Sendable {
     public init() {}
 }
 
-public struct GPXWaypoint: Sendable {
+public final class GPXWaypoint {
     public var point: GPXPoint = GPXPoint()
 
     //public var time
@@ -61,7 +61,7 @@ public struct GPXWaypoint: Sendable {
     public init() {}
 }
 
-public struct GPXTrack: Sendable {
+public final class GPXTrack {
     public var name: String = ""
     public var comment: String = ""
     public var description: String = ""
@@ -74,7 +74,7 @@ public struct GPXTrack: Sendable {
     public init() {}
 }
 
-public struct GPXSegment: Sendable {
+public final class GPXSegment {
     public var points: [GPXPoint] = []
 
     public init() {}

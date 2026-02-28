@@ -13,7 +13,7 @@ struct BasicXMLParserTests {
 
     typealias XMLError = BasicXMLParser.XMLError
 
-    static let root: BasicXMLParser.XMLNode = {
+    nonisolated(unsafe) static let root: BasicXMLParser.XMLNode = {
         let data = Data(gpxSamplePlotaRouteShort.utf8)
         do {
             return try BasicXMLParser().parse(data)

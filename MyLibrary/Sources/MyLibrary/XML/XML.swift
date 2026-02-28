@@ -16,11 +16,18 @@ public final class BasicXMLParser: NSObject, XMLParserDelegate {
         case parsingError(Int)
     }
 
-    public struct XMLNode: Sendable {
-        var name: String = ""
-        var attributes:[String: String] = [:]
-        var content: String = ""
-        var children: [XMLNode] = []
+    public final class XMLNode {
+        public var name: String
+        public var attributes:[String: String]
+        public var content: String
+        public var children: [XMLNode]
+
+        public init(name: String = "", attributes: [String : String] = [:], content: String = "", children: [XMLNode] = []) {
+            self.name = name
+            self.attributes = attributes
+            self.content = content
+            self.children = children
+        }
     }
 
     private var stack = [XMLNode()]
