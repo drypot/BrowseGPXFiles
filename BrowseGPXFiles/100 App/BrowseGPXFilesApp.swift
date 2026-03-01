@@ -9,9 +9,26 @@ import SwiftUI
 
 @main
 struct BrowseGPXFilesApp: App {
+    @Environment(\.openWindow) private var openWindow
+
+    @State private var settings = SettingsData()
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        WindowGroup("Browse GPX Files", id: "MainWindow") {
+            GPXBufferBrowser()
+                .environment(settings)
+        }
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("Open Directory") {
+                    openWindow(id: "MainWindow")
+                }
+                .keyboardShortcut("O", modifiers: [.command])
+            }
+        }
+        Settings {
+            SettingsView()
+                .environment(settings)
         }
     }
 }
