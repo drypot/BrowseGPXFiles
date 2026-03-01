@@ -67,7 +67,7 @@ public enum GPXUtils {
 
     public static func makePolylines(from urls: [URL]) async throws -> [MKPolyline] {
         var polylines: [MKPolyline] = []
-        let items = try DirectoryCrawler().collectFilesRecursively(from: urls)
+        let items = try FileURLCollector().collectRecursively(from: urls)
         for url in items {
             let gpx = try GPXUtils.makeGPX(from: url)
             for track in gpx.tracks {
