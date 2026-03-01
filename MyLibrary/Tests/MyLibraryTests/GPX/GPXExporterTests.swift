@@ -12,12 +12,8 @@ import Testing
 struct GPXExporterTests {
 
     nonisolated(unsafe) static let gpx: GPX = {
-        let data = Data(gpxSampleManualMultiple.utf8)
-        do {
-            return try GPXParser().parse(data)
-        } catch {
-            fatalError()
-        }
+        let url = Bundle.module.resourceURL!.appending(path: "GPXTest/manual-multiple.gpx")
+        return try! GPXParser().parse(contentOf: url)
     }()
 
     nonisolated(unsafe) static var exp: GPXExporter = {

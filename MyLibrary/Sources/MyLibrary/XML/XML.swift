@@ -31,8 +31,13 @@ public final class BasicXMLParser: NSObject, XMLParserDelegate {
     }
 
     private var stack = [XMLNode()]
+
+    public func parse(contentOf url: URL) throws -> XMLNode {
+        let data = try Data(contentsOf: url)
+        return try parse(data: data)
+    }
     
-    public func parse(_ data: Data) throws -> XMLNode {
+    public func parse(data: Data) throws -> XMLNode {
         let parser = XMLParser(data: data)
         parser.delegate = self
         let result = autoreleasepool {

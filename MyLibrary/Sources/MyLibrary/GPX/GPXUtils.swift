@@ -16,7 +16,7 @@ public enum GPXUtils {
     }
 
     public static func makeGPX(from data: Data) throws -> GPX {
-        return try GPXParser().parse(data)
+        return try GPXParser().parse(data: data)
     }
 
     public static func makeData(from gpx: GPX) throws -> Data {

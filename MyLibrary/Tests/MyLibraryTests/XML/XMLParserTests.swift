@@ -11,10 +11,14 @@ import Testing
 
 struct XMLParserTests {
 
+    static let plotaRouteShortData: Data = {
+        let url = Bundle.module.resourceURL!.appending(path: "GPXTest/plotaroute-short.gpx")
+        return try! Data(contentsOf: url)
+    }()
+
     @Test func testXMLParserDidStartDocument() throws {
-        let data = Data(gpxSamplePlotaRouteShort.utf8)
-        let parser = XMLParser(data: data)
-        
+        let parser = XMLParser(data: Self.plotaRouteShortData)
+
         class Delegate: NSObject, XMLParserDelegate {
             let logger = SimpleLogger<String>()
 
@@ -33,14 +37,13 @@ struct XMLParserTests {
 
         #expect(delegate.logger.result() == [
             "start: 1",
-            "end: 21"
+            "end: 22"
         ])
     }
     
     @Test func testXMLParserHandlingElement() throws {
-        let data = Data(gpxSamplePlotaRouteShort.utf8)
-        let parser = XMLParser(data: data)
-        
+        let parser = XMLParser(data: Self.plotaRouteShortData)
+
         class Delegate: NSObject, XMLParserDelegate {
             let logger = SimpleLogger<String>()
 
@@ -65,9 +68,8 @@ struct XMLParserTests {
     }
     
     @Test func testXMLParserHandlingAttributes() throws {
-        let data = Data(gpxSamplePlotaRouteShort.utf8)
-        let parser = XMLParser(data: data)
-        
+        let parser = XMLParser(data: Self.plotaRouteShortData)
+
         class Delegate: NSObject, XMLParserDelegate {
             let logger = SimpleLogger<String>()
 
@@ -95,9 +97,8 @@ struct XMLParserTests {
     }
     
     @Test func testXMLParserHandlingText() throws {
-        let data = Data(gpxSamplePlotaRouteShort.utf8)
-        let parser = XMLParser(data: data)
-        
+        let parser = XMLParser(data: Self.plotaRouteShortData)
+
         class Delegate: NSObject, XMLParserDelegate {
             let logger = SimpleLogger<String>()
 
@@ -127,9 +128,10 @@ struct XMLParserTests {
     }
     
     @Test func testXMLParserHandlingError() throws {
-        let data = Data(gpxSampleBad.utf8)
+        let url = Bundle.module.resourceURL!.appending(path: "GPXTest/bad.gpx")
+        let data = try Data(contentsOf: url)
         let parser = XMLParser(data: data)
-        
+
         class Delegate: NSObject, XMLParserDelegate {
             let logger = SimpleLogger<String>()
 

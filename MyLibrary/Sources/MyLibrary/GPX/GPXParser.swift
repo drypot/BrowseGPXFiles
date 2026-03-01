@@ -13,9 +13,14 @@ import Foundation
 public struct GPXParser {
 
     typealias XMLNode = BasicXMLParser.XMLNode
-    
-    public func parse(_ data: Data) throws -> GPX {
-        let root = try BasicXMLParser().parse(data)
+
+    public func parse(contentOf url: URL) throws -> GPX {
+        let data = try Data(contentsOf: url)
+        return try parse(data: data)
+    }
+
+    public func parse(data: Data) throws -> GPX {
+        let root = try BasicXMLParser().parse(data: data)
         return parse(rootNode: root)
     }
     

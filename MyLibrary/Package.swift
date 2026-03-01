@@ -25,7 +25,8 @@ let package = Package(
             name: "MyLibraryTests",
             dependencies: ["MyLibrary"],
             resources: [
-                 .copy("Resources/DirectoryCrawlerTest")
+                 .copy("Resources/DirectoryCrawlerTest"),
+                 .copy("Resources/GPXTest"),
             ],
         ),
     ]

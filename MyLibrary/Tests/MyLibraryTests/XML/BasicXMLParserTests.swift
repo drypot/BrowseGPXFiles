@@ -14,12 +14,9 @@ struct BasicXMLParserTests {
     typealias XMLError = BasicXMLParser.XMLError
 
     nonisolated(unsafe) static let root: BasicXMLParser.XMLNode = {
-        let data = Data(gpxSamplePlotaRouteShort.utf8)
-        do {
-            return try BasicXMLParser().parse(data)
-        } catch {
-            fatalError()
-        }
+        let url = Bundle.module.resourceURL!.appending(path: "GPXTest/plotaroute-short.gpx")
+        let root = try! BasicXMLParser().parse(contentOf: url)
+        return root
     }()
 
     @Test func testRoot() throws {
@@ -61,22 +58,22 @@ struct BasicXMLParserTests {
     }
 
     @Test func testNoContent() throws {
-        let data = Data(gpxSampleNoContent.utf8)
         #expect(throws: XMLError.parsingError(0)) {
-            try BasicXMLParser().parse(data)
+            let url = Bundle.module.resourceURL!.appending(path: "GPXTest/no-content.gpx")
+            let _ = try BasicXMLParser().parse(contentOf: url)
         }
     }
 
     @Test func testBadFormat() throws {
-        let data = Data(gpxSampleBad.utf8)
         #expect(throws: XMLError.parsingError(9)) {
-            try BasicXMLParser().parse(data)
+            let url = Bundle.module.resourceURL!.appending(path: "GPXTest/bad.gpx")
+            let _ = try BasicXMLParser().parse(contentOf: url)
         }
     }
 
     @Test func testNoTrack() throws {
-        let data = Data(gpxSampleNoTrack.utf8)
-        let root = try BasicXMLParser().parse(data)
+        let url = Bundle.module.resourceURL!.appending(path: "GPXTest/no-track.gpx")
+        let root = try BasicXMLParser().parse(contentOf: url)
         #expect(root.name == "gpx")
         #expect(root.children.first?.name == nil)
     }
