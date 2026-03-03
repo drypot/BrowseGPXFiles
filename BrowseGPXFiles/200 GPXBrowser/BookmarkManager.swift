@@ -1,6 +1,6 @@
 //
 //  BookmarkManager.swift
-//  BrowseTextFiles
+//  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 2/26/26.
 //

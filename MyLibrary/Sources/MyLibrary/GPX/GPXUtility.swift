@@ -1,5 +1,5 @@
 //
-//  GPXUtils.swift
+//  GPXUtility.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 8/20/24.
@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-public enum GPXUtils {
+public enum GPXUtility {
 
     public static func makeGPX(from url: URL) throws -> GPX {
         let data = try Data(contentsOf: url)
@@ -56,7 +56,7 @@ public enum GPXUtils {
 
     public static func makePolylines(from gpxData: Data) throws -> [MKPolyline] {
         var polylines: [MKPolyline] = []
-        let gpx = try GPXUtils.makeGPX(from: gpxData)
+        let gpx = try GPXUtility.makeGPX(from: gpxData)
         for track in gpx.tracks {
             for segment in track.segments {
                 polylines.append(self.makePolyline(from: segment))
@@ -69,7 +69,7 @@ public enum GPXUtils {
         var polylines: [MKPolyline] = []
         let items = try FileURLCollector().collectRecursively(from: urls)
         for url in items {
-            let gpx = try GPXUtils.makeGPX(from: url)
+            let gpx = try GPXUtility.makeGPX(from: url)
             for track in gpx.tracks {
                 for segment in track.segments {
                     polylines.append(self.makePolyline(from: segment))

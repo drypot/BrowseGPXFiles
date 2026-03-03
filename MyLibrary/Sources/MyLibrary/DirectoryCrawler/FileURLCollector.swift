@@ -1,5 +1,5 @@
 //
-//  FileURL.swift
+//  FileURLCollector.swift
 //  MyLibrary
 //
 //  Created by Kyuhyun Park on 2/28/26.

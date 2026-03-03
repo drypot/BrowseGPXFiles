@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  BrowseTextFiles
+//  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 7/17/25.
 //

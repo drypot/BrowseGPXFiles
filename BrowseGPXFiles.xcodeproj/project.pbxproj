@@ -15,9 +15,22 @@
 		00FA26F02F51EB4000AB1CC6 /* BrowseGPXFiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrowseGPXFiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		004493582F55B3B100971453 /* Exceptions for "BrowseGPXFiles" folder in "BrowseGPXFiles" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 00FA26EF2F51EB4000AB1CC6 /* BrowseGPXFiles */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				004493582F55B3B100971453 /* Exceptions for "BrowseGPXFiles" folder in "BrowseGPXFiles" target */,
+			);
 			path = BrowseGPXFiles;
 			sourceTree = "<group>";
 		};
@@ -275,6 +288,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BrowseGPXFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,6 +321,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BrowseGPXFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
