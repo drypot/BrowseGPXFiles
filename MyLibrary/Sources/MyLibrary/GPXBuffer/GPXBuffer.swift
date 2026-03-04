@@ -14,10 +14,10 @@ public final class GPXBuffer: Identifiable, Hashable {
     public private(set) var url: URL
     public private(set) var name: String
 
-    private(set) var gpx: GPX
-    private(set) var polylines: [MKPolyline] = []
+    public private(set) var gpx: GPX
+    public private(set) var polylines: [MKPolyline] = []
 
-    var isSelected = false
+    public var isSelected = false
 
     public var id: URL { url }
 

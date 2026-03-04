@@ -15,7 +15,7 @@ struct BrowseGPXFilesApp: App {
 
     var body: some Scene {
         WindowGroup("Browse GPX Files", id: "MainWindow") {
-            GPXBufferBrowser()
+            GPXBrowser()
                 .environment(settings)
         }
         .commands {

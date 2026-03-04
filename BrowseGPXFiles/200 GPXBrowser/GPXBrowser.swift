@@ -1,5 +1,5 @@
 //
-//  GPXBufferBrowser.swift
+//  GPXBrowser.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 7/6/25.
@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import MyLibrary
 
-struct GPXBufferBrowser: View {
+struct GPXBrowser: View {
     @Environment(SettingsData.self) var settings
 
     @State private var bufferManager = GPXBufferManager()
@@ -29,13 +29,14 @@ struct GPXBufferBrowser: View {
                 openFolderIsPresented = false
                 switch result {
                 case .success(let urls):
+                    saveBookmark(urls)
                     openFiles(from: urls)
                 case .failure:
                     break
                 }
             }
             Button("Open Last Folder") {
-                openLastFolder()
+                loadBookmarked()
             }
         } else if isLoading {
             Text("loading files...")
@@ -45,10 +46,11 @@ struct GPXBufferBrowser: View {
                     NavigationLink(buffer.name, value: buffer)
                 }
             } detail: {
-                Text("GPXFiles: \(bufferManager.buffers.count)")
-                .padding()
+                GPXMapView(bufferManager: bufferManager)
+                    .navigationTitle("")
+                    .ignoresSafeArea(edges: .top)
+                    .toolbarBackground(.hidden, for: .windowToolbar)
             }
-            // .toolbarBackground(.hidden) // macOS 26, 툴바 구분선이 나왔다 사라졌다 한다, 강제로 감추는 옵션.
         }
     }
 
@@ -56,14 +58,11 @@ struct GPXBufferBrowser: View {
         guard isLoading == false else { return }
         isLoading = true
 
-//        if !urls.isEmpty {
-//            BookmarkManager.shared.save(urls[0], forKey: "lastOpenFolder")
-//        }
         Task.detached(priority: .background) {
             do {
                 for url in urls {
                     guard url.startAccessingSecurityScopedResource() else {
-                        print("startAccessingSecurityScopedResource failed: \(url.absoluteString)")
+                        print("failed AccessingSecurityScope: \(url.absoluteString)")
                         break
                     }
                     defer { url.stopAccessingSecurityScopedResource() }
@@ -78,7 +77,17 @@ struct GPXBufferBrowser: View {
         }
     }
 
-    func openLastFolder() {
+    func saveBookmark(_ urls: [URL]) {
+        guard let url = urls.first else { return }
+        guard url.startAccessingSecurityScopedResource() else {
+            print("failed AccessingSecurityScope: \(url.absoluteString)")
+            return
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+        BookmarkManager.shared.save(url, forKey: "lastOpenFolder")
+    }
+
+    func loadBookmarked() {
         if let url = BookmarkManager.shared.load(forKey: "lastOpenFolder") {
             openFiles(from: [url])
         }
@@ -87,7 +96,7 @@ struct GPXBufferBrowser: View {
 
 #Preview {
     let settings = SettingsData()
-    GPXBufferBrowser()
+    GPXBrowser()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .environment(settings)
 }

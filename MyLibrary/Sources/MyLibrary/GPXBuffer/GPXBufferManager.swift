@@ -15,12 +15,12 @@ public class GPXBufferManager {
     public private(set) var buffers: [GPXBuffer] = []
 //    private var bufferDic: [URL: GPXBuffer] = [:]
 
-    private var bufferSet: Set<GPXBuffer> = []
-    private var polylineToGPXCacheMap: [MKPolyline: GPXBuffer] = [:]
+    public private(set) var bufferSet: Set<GPXBuffer> = []
+    public private(set) var polylineToGPXCacheMap: [MKPolyline: GPXBuffer] = [:]
 
-    var addedBuffers: [GPXBuffer] = []
-    var removedBuffers: [GPXBuffer] = []
-    var selectionChangedBuffers: [GPXBuffer] = []
+    public var addedBuffers: [GPXBuffer] = []
+    public var removedBuffers: [GPXBuffer] = []
+    public var selectionChangedBuffers: [GPXBuffer] = []
 
     public init() {}
 
@@ -29,6 +29,7 @@ public class GPXBufferManager {
 
         // TODO: 중복 파일 임포트 방지. 먼 훗날에.
         for url in try GPXFileURLCollector().collectRecursively(from: url) {
+            //print("loading: \(url.absoluteString)")
             let buffer = try GPXBufferMaker().make(from: url)
             tmpBuffers.append(buffer)
         }
@@ -43,7 +44,7 @@ public class GPXBufferManager {
         }
     }
 
-    func flushUpdated() {
+    public func flushUpdated() {
         addedBuffers.removeAll()
         removedBuffers.removeAll()
         selectionChangedBuffers.removeAll()
