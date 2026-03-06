@@ -13,13 +13,12 @@ struct GPXBrowser: View {
     @Environment(SettingsData.self) var settings
 
     @State private var bufferManager = GPXBufferManager()
-    @State private var selectedBuffer: GPXBuffer?
 
     @State private var openFolderIsPresented = false
     @State private var isLoading = false
 
     var body: some View {
-        if bufferManager.buffers.isEmpty {
+        if bufferManager.sortedBuffers.isEmpty {
             Button("Open Folder") {
                 openFolderIsPresented = true
             }
@@ -42,7 +41,7 @@ struct GPXBrowser: View {
             Text("loading files...")
         } else {
             NavigationSplitView {
-                List(bufferManager.buffers, id: \.self, selection: $selectedBuffer) { buffer in
+                List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
                     NavigationLink(buffer.name, value: buffer)
                 }
             } detail: {

@@ -7,6 +7,7 @@
 
 import Foundation
 import UniformTypeIdentifiers
+import MyLibrary
 
 public struct GPXFileURLCollector {
     public init() {}

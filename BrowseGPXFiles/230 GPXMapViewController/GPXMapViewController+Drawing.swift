@@ -1,6 +1,6 @@
 //
 //  GPXMapViewController+Drawing.swift
-//  GPXApp
+//  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 4/26/25.
 //

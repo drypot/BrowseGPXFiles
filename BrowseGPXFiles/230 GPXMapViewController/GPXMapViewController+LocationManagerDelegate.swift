@@ -16,7 +16,7 @@ extension GPXMapViewController: CLLocationManagerDelegate {
         // 위치 한 번 받고 멈춤
         locationManager.stopUpdatingLocation()
 
-        if bufferManager.buffers.isEmpty == true {
+        if bufferManager.sortedBuffers.isEmpty == true {
             let region = MKCoordinateRegion(
                 center: location.coordinate,
                 latitudinalMeters: 50_000,

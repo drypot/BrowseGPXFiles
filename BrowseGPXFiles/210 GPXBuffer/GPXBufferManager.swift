@@ -8,15 +8,19 @@
 import Foundation
 import UniformTypeIdentifiers
 import MapKit
+import MyLibrary
 
 @MainActor @Observable
 public class GPXBufferManager {
 
-    public private(set) var buffers: [GPXBuffer] = []
+    public private(set) var bufferSet: Set<GPXBuffer> = []
+
+    public private(set) var sortedBuffers: [GPXBuffer] = []
 //    private var bufferDic: [URL: GPXBuffer] = [:]
 
-    public private(set) var bufferSet: Set<GPXBuffer> = []
-    public private(set) var polylineToGPXCacheMap: [MKPolyline: GPXBuffer] = [:]
+    public private(set) var polylineToBufferDic: [MKPolyline: GPXBuffer] = [:]
+
+    public var selectedBuffers: Set<GPXBuffer> = []
 
     public var addedBuffers: [GPXBuffer] = []
     public var removedBuffers: [GPXBuffer] = []
@@ -60,10 +64,10 @@ public class GPXBufferManager {
         addedBuffers.append(contentsOf: buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
-                polylineToGPXCacheMap[polyline] = buffer
+                polylineToBufferDic[polyline] = buffer
             }
         }
-        self.buffers = Array(bufferSet).sorted { $0.name < $1.name }
+        self.sortedBuffers = Array(bufferSet).sorted { $0.name < $1.name }
     }
 
     func removeBuffers(_ buffers: [GPXBuffer]) {
@@ -74,12 +78,12 @@ public class GPXBufferManager {
         removedBuffers.append(contentsOf: buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
-                polylineToGPXCacheMap.removeValue(forKey: polyline)
+                polylineToBufferDic.removeValue(forKey: polyline)
             }
         }
     }
 
-    func removeSelectedBuffers() {
+    public func removeSelectedBuffers() {
         let selectedBuffers = bufferSet.filter { $0.isSelected }
         if !selectedBuffers.isEmpty {
             removeBuffers(Array(selectedBuffers))
@@ -88,7 +92,7 @@ public class GPXBufferManager {
 
     // MARK: - Select
 
-    func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
             if buffer.isSelected {
                 deselectAllBuffers()
@@ -101,7 +105,7 @@ public class GPXBufferManager {
         }
     }
 
-    func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    public func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
             if buffer.isSelected {
                 deselectBuffer(buffer)
@@ -113,7 +117,7 @@ public class GPXBufferManager {
 
     func nearestGPX(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
         let polyline = self.nearestPolyline(at: mapPoint, with: tolerance)
-        return polyline.flatMap { polylineToGPXCacheMap[$0] }
+        return polyline.flatMap { polylineToBufferDic[$0] }
     }
 
     func nearestPolyline(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> MKPolyline? {
@@ -135,7 +139,7 @@ public class GPXBufferManager {
         return nearest
     }
 
-    func selectAllBuffers() {
+    public func selectAllBuffers() {
         for buffer in bufferSet {
             if !buffer.isSelected {
                 selectBuffer(buffer)
@@ -143,7 +147,7 @@ public class GPXBufferManager {
         }
     }
 
-    func deselectAllBuffers() {
+    public func deselectAllBuffers() {
         for buffer in bufferSet {
             if buffer.isSelected {
                 deselectBuffer(buffer)

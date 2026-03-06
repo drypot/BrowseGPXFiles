@@ -52,13 +52,6 @@ final class GPXMapViewController: NSViewController {
         }
     }
 
-    func updateSubviews() {
-        updateOverlays()
-//        sidebarController.updateItems()
-//        sidebarController.updateSelected()
-        bufferManager.flushUpdated()
-    }
-
     func addMapView() {
         mapView.frame = view.bounds
 
@@ -76,4 +69,10 @@ final class GPXMapViewController: NSViewController {
         ])
     }
 
+    func updateSubviews() {
+        updateOverlays()
+        //        sidebarController.updateItems()
+        //        sidebarController.updateSelected()
+        bufferManager.flushUpdated()
+    }
 }

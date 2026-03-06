@@ -8,6 +8,7 @@
 import Foundation
 import UniformTypeIdentifiers
 import MapKit
+import MyLibrary
 
 @Observable
 public final class GPXBuffer: Identifiable, Hashable {

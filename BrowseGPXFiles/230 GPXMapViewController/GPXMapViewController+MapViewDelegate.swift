@@ -1,6 +1,6 @@
 //
 //  GPXMapViewController+MapViewDelegate.swift
-//  GPXApp
+//  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 5/16/25.
 //
@@ -12,7 +12,7 @@ import MyLibrary
 extension GPXMapViewController: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let polyline = overlay as? MKPolyline {
-            if let buffer = bufferManager.polylineToGPXCacheMap[polyline] {
+            if let buffer = bufferManager.polylineToBufferDic[polyline] {
                 let renderer = MKPolylineRenderer(polyline: polyline)
                 if buffer.isSelected {
                     renderer.strokeColor = .red
