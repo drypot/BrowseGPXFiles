@@ -21,7 +21,7 @@ extension GPXMapViewController {
         }
         if !zoomRect.isNull {
             let edgePadding = NSEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-            mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: false)
+            mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
         }
     }
 }

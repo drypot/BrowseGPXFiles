@@ -16,6 +16,7 @@ struct GPXBrowser: View {
 
     @State private var openFolderIsPresented = false
     @State private var isLoading = false
+    @State private var mapViewCommand: CommandType = .none
 
     var body: some View {
         if isLoading {
@@ -48,14 +49,14 @@ struct GPXBrowser: View {
                     bufferManager.removeSelectedBuffers()
                 }
             } detail: {
-                GPXMapView(bufferManager: bufferManager)
+                GPXMapView(bufferManager: bufferManager, command: $mapViewCommand)
                     .navigationTitle("")
                     .ignoresSafeArea(edges: .top)
                     .toolbarBackground(.hidden, for: .windowToolbar)
             }
-//            .onCommand(#selector(GPXMapViewController.selectAll(_:))) {
-//                print("selectAll")
-//            }
+            .focusedSceneValue(\.runCommand) { type in
+                runCommand(type)
+            }
         }
     }
 
@@ -95,6 +96,15 @@ struct GPXBrowser: View {
     func loadBookmarked() {
         if let url = BookmarkManager.shared.load(forKey: "lastOpenFolder") {
             openFiles(from: [url])
+        }
+    }
+
+    func runCommand(_ type: CommandType) {
+        switch type {
+        case .zoomToFit:
+            mapViewCommand = type
+        default:
+            break
         }
     }
 }
