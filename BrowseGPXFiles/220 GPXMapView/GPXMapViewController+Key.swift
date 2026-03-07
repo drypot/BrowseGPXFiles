@@ -10,9 +10,6 @@ import MapKit
 import MyLibrary
 
 extension GPXMapViewController {
-
-    override var acceptsFirstResponder: Bool { true }
-
     override func keyDown(with event: NSEvent) {
 
         // specialKey 는 macOS 13, 2022 이상에서만 지원한다고 한다.
@@ -25,5 +22,4 @@ extension GPXMapViewController {
             super.keyDown(with: event)
         }
     }
-
 }

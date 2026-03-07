@@ -60,5 +60,5 @@ import UniformTypeIdentifiers
 
 extension UTType {
     //static let browseGPXFiles: UTType = UTType(exportedAs: "com.drypot.browsegpxfiles")
-    public static let gpx: UTType = UTType(importedAs: "com.topografix.gpx")
+    nonisolated public static let gpx: UTType = UTType(importedAs: "com.topografix.gpx")
 }

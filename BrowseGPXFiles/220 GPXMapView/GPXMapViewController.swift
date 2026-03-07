@@ -20,6 +20,12 @@ final class GPXMapViewController: NSViewController {
 
     let bufferManager: GPXBufferManager
 
+    override var acceptsFirstResponder: Bool { true }
+
+    //    override var undoManager: UndoManager? {
+    //        return document?.undoManager
+    //    }
+
     init(_ bufferManager: GPXBufferManager) {
         self.bufferManager = bufferManager
         super.init(nibName: nil, bundle: nil)

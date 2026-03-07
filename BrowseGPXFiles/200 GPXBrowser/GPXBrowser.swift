@@ -44,12 +44,18 @@ struct GPXBrowser: View {
                 List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
                     NavigationLink(buffer.name, value: buffer)
                 }
+                .onDeleteCommand {
+                    bufferManager.removeSelectedBuffers()
+                }
             } detail: {
                 GPXMapView(bufferManager: bufferManager)
                     .navigationTitle("")
                     .ignoresSafeArea(edges: .top)
                     .toolbarBackground(.hidden, for: .windowToolbar)
             }
+//            .onCommand(#selector(GPXMapViewController.selectAll(_:))) {
+//                print("selectAll")
+//            }
         }
     }
 
