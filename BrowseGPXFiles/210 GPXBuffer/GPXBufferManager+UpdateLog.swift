@@ -15,6 +15,7 @@ extension GPXBufferManager {
         enum MapViewUpdateCommand {
             case addBuffers([GPXBuffer])
             case removeBuffers([GPXBuffer])
+            case updateColor([GPXBuffer])
             case updateBuffers([GPXBuffer])
         }
 
@@ -26,6 +27,10 @@ extension GPXBufferManager {
 
         func logRemoveBuffers(_ buffers: [GPXBuffer]) {
             mapViewUpdateCommands.append(.removeBuffers(buffers))
+        }
+
+        func logUpdateColor(_ buffers: [GPXBuffer]) {
+            mapViewUpdateCommands.append(.updateColor(buffers))
         }
 
         func logUpdateBuffers(_ buffers: [GPXBuffer]) {
@@ -42,6 +47,18 @@ extension GPXBufferManager {
                 case .removeBuffers(let buffers):
                     for buffer in buffers {
                         mapView.removeOverlays(buffer.polylines)
+                    }
+                case .updateColor(let buffers):
+                    for buffer in buffers {
+                        for polyline in buffer.polylines {
+                            if let renderer = mapView.renderer(for: polyline) as? MKPolylineRenderer {
+                                if buffer.isSelected {
+                                    renderer.strokeColor = .red
+                                } else {
+                                    renderer.strokeColor = .blue
+                                }
+                            }
+                        }
                     }
                 case .updateBuffers(let buffers):
                     for buffer in buffers {

@@ -31,7 +31,6 @@ public class GPXBufferManager {
     }
 
     private var polylineToBufferDic: [MKPolyline: GPXBuffer] = [:]
-    // private var bufferDic: [URL: GPXBuffer] = [:]
 
     public var selectedBuffers: Set<GPXBuffer> = [] {
         didSet {
@@ -42,14 +41,14 @@ public class GPXBufferManager {
                 for buffer in inserted {
                     buffer.isSelected = true
                 }
-                updateLog.logUpdateBuffers(Array(inserted))
+                updateLog.logUpdateColor(Array(inserted))
             }
 
             if !removed.isEmpty {
                 for buffer in removed {
                     buffer.isSelected = false
                 }
-                updateLog.logUpdateBuffers(Array(removed))
+                updateLog.logUpdateColor(Array(removed))
             }
         }
     }
