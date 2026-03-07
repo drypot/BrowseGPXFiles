@@ -18,7 +18,9 @@ struct GPXBrowser: View {
     @State private var isLoading = false
 
     var body: some View {
-        if bufferManager.sortedBuffers.isEmpty {
+        if isLoading {
+            Text("loading files...")
+        } else if bufferManager.sortedBuffers.isEmpty {
             Button("Open Folder") {
                 openFolderIsPresented = true
             }
@@ -37,8 +39,6 @@ struct GPXBrowser: View {
             Button("Open Last Folder") {
                 loadBookmarked()
             }
-        } else if isLoading {
-            Text("loading files...")
         } else {
             NavigationSplitView {
                 List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in

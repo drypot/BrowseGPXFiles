@@ -14,6 +14,8 @@ public struct GPXParser {
 
     typealias XMLNode = BasicXMLParser.XMLNode
 
+    public init() {}
+    
     public func parse(contentOf url: URL) throws -> GPX {
         let data = try Data(contentsOf: url)
         return try parse(data: data)

@@ -11,15 +11,14 @@ import MapKit
 import MyLibrary
 
 @Observable
-public final class GPXBuffer: Identifiable, Hashable {
+nonisolated public final class GPXBuffer: Identifiable, Hashable {
     public private(set) var url: URL
     public private(set) var name: String
 
     public private(set) var gpx: GPX
     public private(set) var polylines: [MKPolyline] = []
-
     public var isSelected = false
-
+    
     public var id: URL { url }
 
     public init(url: URL, gpx: GPX) {
@@ -29,9 +28,12 @@ public final class GPXBuffer: Identifiable, Hashable {
         updatePolylines()
     }
 
-//    convenience override init() {
-//        self.init(GPX())
-//    }
+    public convenience init(contentOf url: URL) throws {
+        print("processing: \(url.path)")
+        let data = try Data(contentsOf: url)
+        let gpx = try GPXParser().parse(data: data)
+        self.init(url: url, gpx: gpx)
+    }
 
     // MARK: - Polyline
 
@@ -85,12 +87,5 @@ public final class GPXBuffer: Identifiable, Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-    }
-}
-
-public struct GPXBufferMaker {
-    public func make(from url: URL) throws -> GPXBuffer {
-        let gpx = try GPXUtility.makeGPX(from: url)
-        return  GPXBuffer(url: url, gpx: gpx)
     }
 }

@@ -11,18 +11,7 @@ import MyLibrary
 
 extension GPXMapViewController {
     func updateOverlays() {
-        for buffer in bufferManager.removedBuffers {
-            mapView.removeOverlays(buffer.polylines)
-        }
-        for buffer in bufferManager.selectionChangedBuffers {
-            mapView.removeOverlays(buffer.polylines)
-        }
-        for buffer in bufferManager.addedBuffers {
-            mapView.addOverlays(buffer.polylines)
-        }
-        for buffer in bufferManager.selectionChangedBuffers {
-            mapView.addOverlays(buffer.polylines)
-        }
+        bufferManager.update(mapView)
     }
 
     func zoomToFitAllOverlays() {
@@ -34,6 +23,24 @@ extension GPXMapViewController {
             let edgePadding = NSEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
             mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: false)
         }
+    }
+}
+
+extension GPXMapViewController: MKMapViewDelegate {
+    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let polyline = overlay as? MKPolyline {
+            if let buffer = bufferManager.buffer(from: polyline) {
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                if buffer.isSelected {
+                    renderer.strokeColor = .red
+                } else {
+                    renderer.strokeColor = .blue
+                }
+                renderer.lineWidth = 3.0
+                return renderer
+            }
+        }
+        return MKOverlayRenderer(overlay: overlay)
     }
 }
 

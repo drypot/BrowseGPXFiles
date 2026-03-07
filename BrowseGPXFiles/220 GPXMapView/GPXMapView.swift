@@ -17,7 +17,9 @@ struct GPXMapView: NSViewControllerRepresentable {
     }
 
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {
-        controller.updateSubviews()
+        print("update")
+        let _ = bufferManager.selectedBuffers.count
+        controller.updateOverlays()
     }
 }
 

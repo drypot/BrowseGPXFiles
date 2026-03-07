@@ -10,15 +10,6 @@ import MapKit
 
 public enum GPXUtility {
 
-    public static func makeGPX(from url: URL) throws -> GPX {
-        let data = try Data(contentsOf: url)
-        return try makeGPX(from: data)
-    }
-
-    public static func makeGPX(from data: Data) throws -> GPX {
-        return try GPXParser().parse(data: data)
-    }
-
     public static func makeData(from gpx: GPX) throws -> Data {
         let xmlString = GPXExporter(gpx).makeXMLString()
         return Data(xmlString.utf8)
@@ -54,30 +45,30 @@ public enum GPXUtility {
         return MKPolyline(coordinates: points, count: points.count)
     }
 
-    public static func makePolylines(from gpxData: Data) throws -> [MKPolyline] {
-        var polylines: [MKPolyline] = []
-        let gpx = try GPXUtility.makeGPX(from: gpxData)
-        for track in gpx.tracks {
-            for segment in track.segments {
-                polylines.append(self.makePolyline(from: segment))
-            }
-        }
-        return polylines
-    }
+//    public static func makePolylines(from gpxData: Data) throws -> [MKPolyline] {
+//        var polylines: [MKPolyline] = []
+//        let gpx = try GPXUtility.makeGPX(from: gpxData)
+//        for track in gpx.tracks {
+//            for segment in track.segments {
+//                polylines.append(self.makePolyline(from: segment))
+//            }
+//        }
+//        return polylines
+//    }
 
-    public static func makePolylines(from urls: [URL]) async throws -> [MKPolyline] {
-        var polylines: [MKPolyline] = []
-        let items = try FileURLCollector().collectRecursively(from: urls)
-        for url in items {
-            let gpx = try GPXUtility.makeGPX(from: url)
-            for track in gpx.tracks {
-                for segment in track.segments {
-                    polylines.append(self.makePolyline(from: segment))
-                }
-            }
-        }
-        return polylines
-    }
+//    public static func makePolylines(from urls: [URL]) async throws -> [MKPolyline] {
+//        var polylines: [MKPolyline] = []
+//        let items = try FileURLCollector().collectRecursively(from: urls)
+//        for url in items {
+//            let gpx = try GPXUtility.readGPX(from: url)
+//            for track in gpx.tracks {
+//                for segment in track.segments {
+//                    polylines.append(self.makePolyline(from: segment))
+//                }
+//            }
+//        }
+//        return polylines
+//    }
 
     public static func calcDistance(from point: MKMapPoint, to polyline: MKPolyline) -> CLLocationDistance {
         var minDistance: CLLocationDistance = .greatestFiniteMagnitude

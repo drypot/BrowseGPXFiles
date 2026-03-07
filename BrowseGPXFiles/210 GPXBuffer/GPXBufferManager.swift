@@ -12,70 +12,71 @@ import MyLibrary
 
 @MainActor @Observable
 public class GPXBufferManager {
+    private let updateLog = UpdateLog()
 
-    public private(set) var bufferSet: Set<GPXBuffer> = []
+    private var _bufferSetUpdated = true
+    private(set) var buffers: Set<GPXBuffer> = [] {
+        didSet {
+            _bufferSetUpdated = true
+        }
+    }
 
-    public private(set) var sortedBuffers: [GPXBuffer] = []
-//    private var bufferDic: [URL: GPXBuffer] = [:]
+    private var _sortedBuffers: [GPXBuffer] = []
+    public var sortedBuffers: [GPXBuffer] {
+        if _bufferSetUpdated {
+            _sortedBuffers = Array(buffers).sorted { $0.name < $1.name }
+            _bufferSetUpdated = false
+        }
+        return _sortedBuffers
+    }
 
-    public private(set) var polylineToBufferDic: [MKPolyline: GPXBuffer] = [:]
+    private var polylineToBufferDic: [MKPolyline: GPXBuffer] = [:]
+    // private var bufferDic: [URL: GPXBuffer] = [:]
 
-    public var selectedBuffers: Set<GPXBuffer> = []
+    public var selectedBuffers: Set<GPXBuffer> = [] {
+        didSet {
+            let inserted = selectedBuffers.subtracting(oldValue)
+            let removed = oldValue.subtracting(selectedBuffers)
 
-    public var addedBuffers: [GPXBuffer] = []
-    public var removedBuffers: [GPXBuffer] = []
-    public var selectionChangedBuffers: [GPXBuffer] = []
+            if !inserted.isEmpty {
+                for buffer in inserted {
+                    buffer.isSelected = true
+                }
+                updateLog.logUpdateBuffers(Array(inserted))
+            }
+
+            if !removed.isEmpty {
+                for buffer in removed {
+                    buffer.isSelected = false
+                }
+                updateLog.logUpdateBuffers(Array(removed))
+            }
+        }
+    }
 
     public init() {}
 
-    public func loadGPXFiles(from url: URL) async throws {
-        var tmpBuffers: [GPXBuffer] = []
+    // MARK: - Insert / Delete
 
-        // TODO: 중복 파일 임포트 방지. 먼 훗날에.
-        for url in try GPXFileURLCollector().collectRecursively(from: url) {
-            //print("loading: \(url.absoluteString)")
-            let buffer = try GPXBufferMaker().make(from: url)
-            tmpBuffers.append(buffer)
-        }
-
-        await MainActor.run {
-            //        undoManager?.disableUndoRegistration()
-            self.addBuffers(tmpBuffers)
-            //        undoManager?.enableUndoRegistration()
-
-            //        buffers.append(buffer)
-            //        bufferDic[url] = buffer
-        }
-    }
-
-    public func flushUpdated() {
-        addedBuffers.removeAll()
-        removedBuffers.removeAll()
-        selectionChangedBuffers.removeAll()
-    }
-
-    // MARK: - Insert, Delete
-
-    func addBuffers(_ buffers: [GPXBuffer]) {
-//        undoManager?.registerUndo(withTarget: self) {
-//            $0.removeGPXCaches(buffers)
-//        }
-        bufferSet.formUnion(buffers)
-        addedBuffers.append(contentsOf: buffers)
+    private func addBuffers(_ buffers: [GPXBuffer]) {
+        //        undoManager?.registerUndo(withTarget: self) {
+        //            $0.removeGPXCaches(buffers)
+        //        }
+        updateLog.logAddBuffers(buffers)
+        self.buffers.formUnion(buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
                 polylineToBufferDic[polyline] = buffer
             }
         }
-        self.sortedBuffers = Array(bufferSet).sorted { $0.name < $1.name }
     }
 
-    func removeBuffers(_ buffers: [GPXBuffer]) {
-//        undoManager?.registerUndo(withTarget: self) {
-//            $0.addGPXCaches(buffers)
-//        }
-        bufferSet.subtract(buffers)
-        removedBuffers.append(contentsOf: buffers)
+    private func removeBuffers(_ buffers: [GPXBuffer]) {
+        //        undoManager?.registerUndo(withTarget: self) {
+        //            $0.addGPXCaches(buffers)
+        //        }
+        updateLog.logRemoveBuffers(buffers)
+        self.buffers.subtract(buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
                 polylineToBufferDic.removeValue(forKey: polyline)
@@ -83,18 +84,86 @@ public class GPXBufferManager {
         }
     }
 
-    public func removeSelectedBuffers() {
-        let selectedBuffers = bufferSet.filter { $0.isSelected }
-        if !selectedBuffers.isEmpty {
-            removeBuffers(Array(selectedBuffers))
+    // MARK: - Polyline
+
+    public func update(_ mapView: MKMapView) {
+        updateLog.update(mapView)
+    }
+
+    public func buffer(from polyline: MKPolyline) -> GPXBuffer? {
+        return polylineToBufferDic[polyline]
+    }
+
+    // MARK: - File I/O
+
+    nonisolated public func loadGPXFiles(from url: URL) async throws {
+        var buffers: [GPXBuffer] = []
+
+        // TODO: 중복 파일 임포트 방지. 먼 훗날에.
+        for url in try GPXFileURLCollector().collectRecursively(from: url) {
+            //print("loading: \(url.absoluteString)")
+            let buffer = try GPXBuffer(contentOf: url)
+            buffers.append(buffer)
         }
+        await self.addBuffers(buffers)
+
+//        await MainActor.run {
+//            //        undoManager?.disableUndoRegistration()
+////            self.addBuffers(buffers)
+//            //        undoManager?.enableUndoRegistration()
+//
+//            //        buffers.append(buffer)
+//            //        bufferDic[url] = buffer
+//        }
     }
 
     // MARK: - Select
 
+    func selectBuffer(_ buffer: GPXBuffer) {
+        //        undoManager?.registerUndo(withTarget: self) {
+        //            $0.deselectGPXCache(buffer)
+        //        }
+        selectedBuffers.insert(buffer)
+    }
+
+    func deselectBuffer(_ buffer: GPXBuffer) {
+        //        undoManager?.registerUndo(withTarget: self) {
+        //            $0.selectGPXCache(buffer)
+        //        }
+        //        buffer.isSelected = false
+        selectedBuffers.remove(buffer)
+    }
+
+    public func selectAllBuffers() {
+        selectedBuffers = self.buffers
+        //        for buffer in buffers {
+        //            if !buffer.isSelected {
+        //                selectBuffer(buffer)
+        //            }
+        //        }
+    }
+
+    public func deselectAllBuffers() {
+        //        undoManager? ...
+        //        for buffer in buffers {
+        //            if buffer.isSelected {
+        //                deselectBuffer(buffer)
+        //            }
+        //        }
+        selectedBuffers.removeAll()
+    }
+
+    public func removeSelectedBuffers() {
+        //        let selectedBuffers = buffers.filter { $0.isSelected }
+        if !selectedBuffers.isEmpty {
+            removeBuffers(Array(selectedBuffers))
+            selectedBuffers.removeAll()
+        }
+    }
+
     public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
-            if buffer.isSelected {
+            if selectedBuffers.contains(buffer) {
                 deselectAllBuffers()
             } else {
                 deselectAllBuffers()
@@ -107,7 +176,7 @@ public class GPXBufferManager {
 
     public func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
-            if buffer.isSelected {
+            if selectedBuffers.contains(buffer) {
                 deselectBuffer(buffer)
             } else {
                 selectBuffer(buffer)
@@ -123,7 +192,7 @@ public class GPXBufferManager {
     func nearestPolyline(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> MKPolyline? {
         var nearest: MKPolyline?
         var minDistance: CLLocationDistance = .greatestFiniteMagnitude
-        for buffer in bufferSet {
+        for buffer in buffers {
             for polyline in buffer.polylines {
                 let rect = polyline.boundingMapRect.insetBy(dx: -tolerance, dy: -tolerance)
                 if !rect.contains(mapPoint) {
@@ -137,40 +206,6 @@ public class GPXBufferManager {
             }
         }
         return nearest
-    }
-
-    public func selectAllBuffers() {
-        for buffer in bufferSet {
-            if !buffer.isSelected {
-                selectBuffer(buffer)
-            }
-        }
-    }
-
-    public func deselectAllBuffers() {
-        for buffer in bufferSet {
-            if buffer.isSelected {
-                deselectBuffer(buffer)
-            }
-        }
-    }
-
-    // MARK: - Select Core
-
-    func selectBuffer(_ buffer: GPXBuffer) {
-//        undoManager?.registerUndo(withTarget: self) {
-//            $0.deselectGPXCache(buffer)
-//        }
-        buffer.isSelected = true
-        selectionChangedBuffers.append(buffer)
-    }
-
-    func deselectBuffer(_ buffer: GPXBuffer) {
-//        undoManager?.registerUndo(withTarget: self) {
-//            $0.selectGPXCache(buffer)
-//        }
-        buffer.isSelected = false
-        selectionChangedBuffers.append(buffer)
     }
 
 }

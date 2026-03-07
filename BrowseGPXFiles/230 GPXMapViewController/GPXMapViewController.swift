@@ -47,7 +47,7 @@ final class GPXMapViewController: NSViewController {
         addMapView()
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요
         DispatchQueue.main.async {
-            self.updateSubviews()
+            self.updateOverlays()
             self.zoomToFitAllOverlays()
         }
     }
@@ -67,12 +67,5 @@ final class GPXMapViewController: NSViewController {
 //            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 //            mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-    }
-
-    func updateSubviews() {
-        updateOverlays()
-        //        sidebarController.updateItems()
-        //        sidebarController.updateSelected()
-        bufferManager.flushUpdated()
     }
 }

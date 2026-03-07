@@ -65,12 +65,12 @@ extension GPXMapViewController {
 
     func beginGPXSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         bufferManager.beginSelection(at: mapPoint, with: tolerance)
-        updateSubviews()
+        updateOverlays()
     }
 
     func toggleGPXSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         bufferManager.toggleSelection(at: mapPoint, with: tolerance)
-        updateSubviews()
+        updateOverlays()
     }
 
     func mapPoint(at point: NSPoint) -> (MKMapPoint, CLLocationDistance) {

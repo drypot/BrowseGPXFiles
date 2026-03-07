@@ -9,7 +9,7 @@ import Foundation
 import UniformTypeIdentifiers
 import MyLibrary
 
-public struct GPXFileURLCollector {
+nonisolated public struct GPXFileURLCollector {
     public init() {}
     
     public func collectRecursively(from url: URL) throws -> [URL] {
