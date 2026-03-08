@@ -42,8 +42,15 @@ struct GPXBrowser: View {
                 showImporter = false
                 if case .success(let urls) = result {
                     saveBookmark(urls)
-                    importFolders(urls)
+                    importFiles(urls)
                 }
+            }
+            .onOpenURL { url in
+                saveBookmark([url])
+                importFiles([url])
+            }
+            .dropDestination(for: URL.self) { urls, session in
+                importFiles(urls)
             }
 
             if isLoading {
@@ -71,11 +78,10 @@ struct GPXBrowser: View {
 
     func saveBookmark(_ urls: [URL]) {
         guard let url = urls.first else { return }
-        guard url.startAccessingSecurityScopedResource() else {
-            print("failed AccessingSecurityScope: \(url.absoluteString)")
-            return
+        let accessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if accessing { url.stopAccessingSecurityScopedResource() }
         }
-        defer { url.stopAccessingSecurityScopedResource() }
         BookmarkManager.shared.save(url, forKey: "lastOpenFolder")
     }
 
@@ -83,15 +89,17 @@ struct GPXBrowser: View {
         return BookmarkManager.shared.load(forKey: "lastOpenFolder")
     }
 
-    func importFolders(_ urls: [URL]) {
+    func importFiles(_ urls: [URL]) {
         guard isLoading == false else { return }
         isLoading = true
 
         Task.detached(priority: .background) {
             do {
                 for url in urls {
-                    guard url.startAccessingSecurityScopedResource() else { break }
-                    defer { url.stopAccessingSecurityScopedResource() }
+                    let accessing = url.startAccessingSecurityScopedResource()
+                    defer {
+                        if accessing { url.stopAccessingSecurityScopedResource() }
+                    }
                     try await bufferManager.importGPXFiles(from: url)
                 }
             } catch {
@@ -106,7 +114,7 @@ struct GPXBrowser: View {
 
     func importRecent() {
         if let url = loadBookmark() {
-            importFolders([url])
+            importFiles([url])
         }
     }
 

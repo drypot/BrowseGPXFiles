@@ -39,6 +39,8 @@ extension GPXMapViewController {
             if let initialClickLocation {
                 if event.modifierFlags.contains(.shift) {
                     handleShiftClick(at: initialClickLocation)
+                } else if event.modifierFlags.contains(.command) {
+                    handleShiftClick(at: initialClickLocation)
                 } else {
                     handleClick(at: initialClickLocation)
                 }
@@ -54,6 +56,11 @@ extension GPXMapViewController {
     }
 
     func handleShiftClick(at point: NSPoint) {
+        let (mapPoint, tolerance) = mapPoint(at: point)
+        toggleGPXSelection(at: mapPoint, with: tolerance)
+    }
+
+    func handleCmdClick(at point: NSPoint) {
         let (mapPoint, tolerance) = mapPoint(at: point)
         toggleGPXSelection(at: mapPoint, with: tolerance)
     }
