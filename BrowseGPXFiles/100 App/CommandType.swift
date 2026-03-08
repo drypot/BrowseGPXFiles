@@ -10,6 +10,7 @@ import SwiftUI
 
 enum CommandType {
     case none
+    case importFolders, importRecent
     case zoomIn, zoomOut, zoomToFit
 }
 

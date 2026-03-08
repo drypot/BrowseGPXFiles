@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct BrowseGPXFilesApp: App {
+    @Environment(\.openWindow) private var openWindow
     @State private var settings = SettingsData()
 
     var body: some Scene {
@@ -17,6 +18,12 @@ struct BrowseGPXFilesApp: App {
                 .environment(settings)
         }
         .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("New Browser") {
+                    openWindow(id: "MainWindow")
+                }
+                .keyboardShortcut("N", modifiers: [.command])
+            }
             GPXBrowserCommands()
         }
         Settings {

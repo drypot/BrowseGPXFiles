@@ -19,6 +19,11 @@ struct GPXMapView: NSViewControllerRepresentable {
 
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {
         let _ = bufferManager.selectedBuffers.count
+        controller.updateOverlays()
+        runCommand(controller)
+    }
+
+    func runCommand(_ controller: GPXMapViewController) {
         if command != .none {
             switch command {
             case .zoomToFit:
@@ -30,7 +35,6 @@ struct GPXMapView: NSViewControllerRepresentable {
                 command = .none
             }
         }
-        controller.updateOverlays()
     }
 }
 

@@ -29,7 +29,7 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
     }
 
     public convenience init(contentOf url: URL) throws {
-        print("processing: \(url.path)")
+        // print("processing: \(url.path)")
         let data = try Data(contentsOf: url)
         let gpx = try GPXParser().parse(data: data)
         self.init(url: url, gpx: gpx)

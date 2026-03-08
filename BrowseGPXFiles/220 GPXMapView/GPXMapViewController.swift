@@ -52,7 +52,7 @@ final class GPXMapViewController: NSViewController {
         super.viewDidAppear()
         addMapView()
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요
-        DispatchQueue.main.async {
+        Task {
             self.updateOverlays()
             self.zoomToFitAllOverlays()
         }

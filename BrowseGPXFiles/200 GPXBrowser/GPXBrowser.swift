@@ -14,33 +14,12 @@ struct GPXBrowser: View {
 
     @State private var bufferManager = GPXBufferManager()
 
-    @State private var openFolderIsPresented = false
+    @State private var showImporter = false
     @State private var isLoading = false
     @State private var mapViewCommand: CommandType = .none
 
     var body: some View {
-        if isLoading {
-            Text("loading files...")
-        } else if bufferManager.sortedBuffers.isEmpty {
-            Button("Open Folder") {
-                openFolderIsPresented = true
-            }
-            .fileImporter(isPresented: $openFolderIsPresented,
-                          allowedContentTypes: [.folder, .gpx],
-                          allowsMultipleSelection: true) { result in
-                openFolderIsPresented = false
-                switch result {
-                case .success(let urls):
-                    saveBookmark(urls)
-                    openFiles(from: urls)
-                case .failure:
-                    break
-                }
-            }
-            Button("Open Last Folder") {
-                loadBookmarked()
-            }
-        } else {
+        ZStack {
             NavigationSplitView {
                 List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
                     NavigationLink(buffer.name, value: buffer)
@@ -57,28 +36,35 @@ struct GPXBrowser: View {
             .focusedSceneValue(\.runCommand) { type in
                 runCommand(type)
             }
-        }
-    }
-
-    func openFiles(from urls: [URL]) {
-        guard isLoading == false else { return }
-        isLoading = true
-
-        Task.detached(priority: .background) {
-            do {
-                for url in urls {
-                    guard url.startAccessingSecurityScopedResource() else {
-                        print("failed AccessingSecurityScope: \(url.absoluteString)")
-                        break
-                    }
-                    defer { url.stopAccessingSecurityScopedResource() }
-                    try await bufferManager.loadGPXFiles(from: url)
+            .fileImporter(isPresented: $showImporter,
+                          allowedContentTypes: [.folder, .gpx],
+                          allowsMultipleSelection: true) { result in
+                showImporter = false
+                if case .success(let urls) = result {
+                    saveBookmark(urls)
+                    importFolders(urls)
                 }
-            } catch {
-                print("failed to load GPX files: \(error.localizedDescription)")
             }
-            await MainActor.run {
-                self.isLoading = false
+
+            if isLoading {
+                ZStack {
+                    Color.black.opacity(0.4) // 배경을 어둡게 처리 (선택 사항)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: 12) {
+                        ProgressView() // 기본 로딩 애니메이션
+                            .controlSize(.large)
+                            .tint(.white)
+
+                        Text("Importing ...")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                    }
+                    .padding(20)
+                    .background(.ultraThinMaterial) // 반투명 유리 효과
+                    .cornerRadius(12)
+                }
+                .transition(.opacity) // 나타나고 사라질 때 부드럽게
             }
         }
     }
@@ -93,14 +79,43 @@ struct GPXBrowser: View {
         BookmarkManager.shared.save(url, forKey: "lastOpenFolder")
     }
 
-    func loadBookmarked() {
-        if let url = BookmarkManager.shared.load(forKey: "lastOpenFolder") {
-            openFiles(from: [url])
+    func loadBookmark() -> URL? {
+        return BookmarkManager.shared.load(forKey: "lastOpenFolder")
+    }
+
+    func importFolders(_ urls: [URL]) {
+        guard isLoading == false else { return }
+        isLoading = true
+
+        Task.detached(priority: .background) {
+            do {
+                for url in urls {
+                    guard url.startAccessingSecurityScopedResource() else { break }
+                    defer { url.stopAccessingSecurityScopedResource() }
+                    try await bufferManager.importGPXFiles(from: url)
+                }
+            } catch {
+                print("failed to import GPX files: \(error.localizedDescription)")
+            }
+            await MainActor.run {
+                self.isLoading = false
+                self.mapViewCommand = .zoomToFit
+            }
+        }
+    }
+
+    func importRecent() {
+        if let url = loadBookmark() {
+            importFolders([url])
         }
     }
 
     func runCommand(_ type: CommandType) {
         switch type {
+        case .importFolders:
+            showImporter = true
+        case .importRecent:
+            importRecent()
         case .zoomToFit:
             mapViewCommand = type
         default:

@@ -8,15 +8,23 @@
 import SwiftUI
 
 struct GPXBrowserCommands: Commands {
-    @Environment(\.openWindow) private var openWindow
     @FocusedValue(\.runCommand) private var runCommand
 
     var body: some Commands {
-        CommandGroup(replacing: .newItem) {
-            Button("Open Directory") {
-                openWindow(id: "MainWindow")
+        CommandGroup(replacing: .importExport) {
+            Button {
+                runCommand?(.importFolders)
+            } label: {
+                Label("Import ...", systemImage: "square.and.arrow.down")
             }
-            .keyboardShortcut("O", modifiers: [.command])
+            .keyboardShortcut("i", modifiers: .command)
+
+            Button {
+                runCommand?(.importRecent)
+            } label: {
+                Label("Import Recent", systemImage: "square.and.arrow.down.badge.clock")
+            }
+            .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         CommandGroup(after: .toolbar) {
             Button {

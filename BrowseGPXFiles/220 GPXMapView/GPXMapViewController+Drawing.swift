@@ -11,7 +11,7 @@ import MyLibrary
 
 extension GPXMapViewController {
     func updateOverlays() {
-        bufferManager.update(mapView)
+        bufferManager.updateMapView(mapView)
     }
 
     func zoomToFitAllOverlays() {

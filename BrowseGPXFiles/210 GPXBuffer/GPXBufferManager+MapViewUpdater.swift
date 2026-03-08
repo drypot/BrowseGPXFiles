@@ -1,5 +1,5 @@
 //
-//  GPXBufferManager+UpdateLog.swift
+//  GPXBufferManager+MapViewUpdater.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 3/7/26.
@@ -11,7 +11,7 @@ import MyLibrary
 
 extension GPXBufferManager {
 
-    final class UpdateLog {
+    final class MapViewUpdater {
         enum MapViewUpdateCommand {
             case addBuffers([GPXBuffer])
             case removeBuffers([GPXBuffer])
@@ -21,23 +21,23 @@ extension GPXBufferManager {
 
         var mapViewUpdateCommands: [MapViewUpdateCommand] = []
 
-        func logAddBuffers(_ buffers: [GPXBuffer]) {
+        func queueAddBuffers(_ buffers: [GPXBuffer]) {
             mapViewUpdateCommands.append(.addBuffers(buffers))
         }
 
-        func logRemoveBuffers(_ buffers: [GPXBuffer]) {
+        func queueRemoveBuffers(_ buffers: [GPXBuffer]) {
             mapViewUpdateCommands.append(.removeBuffers(buffers))
         }
 
-        func logUpdateColor(_ buffers: [GPXBuffer]) {
+        func queueUpdateColor(_ buffers: [GPXBuffer]) {
             mapViewUpdateCommands.append(.updateColor(buffers))
         }
 
-        func logUpdateBuffers(_ buffers: [GPXBuffer]) {
+        func queueUpdateBuffers(_ buffers: [GPXBuffer]) {
             mapViewUpdateCommands.append(.updateBuffers(buffers))
         }
 
-        func update(_ mapView: MKMapView) {
+        func flush(to mapView: MKMapView) {
             for command in mapViewUpdateCommands {
                 switch command {
                 case .addBuffers(let buffers):
