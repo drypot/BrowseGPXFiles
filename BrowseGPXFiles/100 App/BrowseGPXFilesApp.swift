@@ -59,10 +59,8 @@ struct BrowseGPXFilesApp: App {
         .restorationBehavior(.disabled)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button {
+                Button("About BrowseGPXFiles", systemImage: "info.circle") {
                     openWindow(id: "about")
-                } label: {
-                    Label("About BrowseGPXFiles", systemImage: "info.circle")
                 }
             }
         }

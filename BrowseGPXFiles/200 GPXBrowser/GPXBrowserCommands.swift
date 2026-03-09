@@ -12,39 +12,29 @@ struct GPXBrowserCommands: Commands {
 
     var body: some Commands {
         CommandGroup(replacing: .importExport) {
-            Button {
+            Button("Import ...", systemImage: "square.and.arrow.down") {
                 runCommand?(.importFolders)
-            } label: {
-                Label("Import ...", systemImage: "square.and.arrow.down")
             }
             .keyboardShortcut("i", modifiers: .command)
 
-            Button {
+            Button("Import Recent", systemImage: "square.and.arrow.down.badge.clock") {
                 runCommand?(.importRecent)
-            } label: {
-                Label("Import Recent", systemImage: "square.and.arrow.down.badge.clock")
             }
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         CommandGroup(after: .toolbar) {
-            Button {
+            Button("Zoom In", systemImage: "plus.magnifyingglass") {
                 runCommand?(.zoomIn)
-            } label: {
-                Label("Zoom In", systemImage: "plus.magnifyingglass")
             }
             .keyboardShortcut("+", modifiers: .command)
 
-            Button {
+            Button("Zoom Out", systemImage: "minus.magnifyingglass") {
                 runCommand?(.zoomOut)
-            } label: {
-                Label("Zoom Out", systemImage: "minus.magnifyingglass")
             }
             .keyboardShortcut("-", modifiers: .command)
 
-            Button {
+            Button("Zoom to Fit", systemImage: "viewfinder") {
                 runCommand?(.zoomToFit)
-            } label: {
-                Label("Zoom to Fit", systemImage: "viewfinder")
             }
             .keyboardShortcut("0", modifiers: .command)
         }
