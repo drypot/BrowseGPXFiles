@@ -47,9 +47,7 @@ struct GPXBrowser: View {
             }
         } detail: {
             GPXMapView(bufferManager: bufferManager, command: $mapViewCommand)
-                .navigationTitle("")
-                .ignoresSafeArea(edges: .top)
-                .toolbarBackground(.hidden, for: .windowToolbar)
+                .ignoresSafeArea()
         }
         .focusedSceneValue(\.runCommand) { type in
             runCommand(type)

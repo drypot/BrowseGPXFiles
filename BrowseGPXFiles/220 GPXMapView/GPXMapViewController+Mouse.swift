@@ -11,43 +11,72 @@ import MyLibrary
 
 extension GPXMapViewController {
 
+    override func flagsChanged(with event: NSEvent) {
+        isSelectionMode = event.modifierFlags.contains(.command)
+        mapView.isScrollEnabled = !isSelectionMode
+    }
+
     override func mouseDown(with event: NSEvent) {
         self.view.window?.makeFirstResponder(self)
-        initialClickLocation = mapView.convert(event.locationInWindow, from: nil)
+
+//        let location = mapView.convert(event.locationInWindow, from: nil)
+//        startPoint = location
+
+        startPoint = event.locationInWindow
         isDragging = false
     }
 
     override func mouseDragged(with event: NSEvent) {
-        guard let initialClickLocation else { return }
+        guard let startPoint else { return }
 
-        let currentClickLocation = mapView.convert(event.locationInWindow, from: nil)
+//        let current = mapView.convert(event.locationInWindow, from: nil)
+        let current = event.locationInWindow
 
-        let dx = currentClickLocation.x - initialClickLocation.x
-        let dy = currentClickLocation.y - initialClickLocation.y
+        let dx = current.x - startPoint.x
+        let dy = current.y - startPoint.y
         let distance = sqrt(dx * dx + dy * dy)
 
         if distance > tolerance {
             isDragging = true
-//            handleDrag(to: currentLocationInView)
+
+            if isSelectionMode {
+                let p1 = view.convert(startPoint, from: nil)
+                let p2 = view.convert(current, from: nil)
+                let rect = CGRect(
+                    x: min(p1.x, p2.x),
+                    y: min(p1.y, p2.y),
+                    width: abs(dx),
+                    height: abs(dy)
+                )
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                selectionLayer.frame = view.bounds
+                selectionLayer.path = CGPath(rect: rect, transform: nil)
+                selectionLayer.isHidden = false
+                CATransaction.commit()
+            }
         }
     }
 
     override func mouseUp(with event: NSEvent) {
         if isDragging {
-            //...
+            guard let path = selectionLayer.path else { return }
+            let _ = path.boundingBox
+            // ...
         } else {
-            if let initialClickLocation {
-                if event.modifierFlags.contains(.shift) {
-                    handleShiftClick(at: initialClickLocation)
-                } else if event.modifierFlags.contains(.command) {
-                    handleShiftClick(at: initialClickLocation)
-                } else {
-                    handleClick(at: initialClickLocation)
-                }
+            guard let startPoint else { return }
+            let p = mapView.convert(startPoint, from: nil)
+            if event.modifierFlags.contains(.shift) {
+                handleShiftClick(at: p)
+            } else if event.modifierFlags.contains(.command) {
+                handleShiftClick(at: p)
+            } else {
+                handleClick(at: p)
             }
         }
-        initialClickLocation = nil
+        startPoint = nil
         isDragging = false
+        selectionLayer.isHidden = true
     }
 
     func handleClick(at point: NSPoint) {

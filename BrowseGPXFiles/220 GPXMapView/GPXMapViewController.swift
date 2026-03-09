@@ -14,9 +14,11 @@ final class GPXMapViewController: NSViewController {
     let locationManager = CLLocationManager()
     let mapView = MKMapView()
 
-    var initialClickLocation: NSPoint?
+    var startPoint: NSPoint?
     var isDragging = false
+    var isSelectionMode: Bool = false
     var tolerance: CGFloat = 5.0
+    var selectionLayer = CAShapeLayer()
 
     let bufferManager: GPXBufferManager
 
@@ -37,6 +39,7 @@ final class GPXMapViewController: NSViewController {
 
     override func loadView() {
         view = NSView()
+        view.wantsLayer = true
 
         view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         view.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -71,11 +74,13 @@ final class GPXMapViewController: NSViewController {
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
+        selectionLayer.fillColor = NSColor.systemBlue.withAlphaComponent(0.3).cgColor
+        selectionLayer.strokeColor = NSColor.systemBlue.cgColor
+        selectionLayer.lineWidth = 1.0
+        selectionLayer.zPosition = 999
+        view.layer?.addSublayer(selectionLayer)
+
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요
-//        Task {
-//            self.updateOverlays()
-//            self.zoomToFitAllOverlays()
-//        }
     }
 
     func updateOverlays() {
