@@ -20,11 +20,30 @@ struct GPXBrowser: View {
 
     var body: some View {
         NavigationSplitView {
-            List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
-                NavigationLink(buffer.name, value: buffer)
-            }
-            .onDeleteCommand {
-                bufferManager.removeSelectedBuffers()
+            if bufferManager.sortedBuffers.isEmpty {
+                Button("Import ...") {
+                    showImporter = true
+                }
+            } else {
+                List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
+                    Text(buffer.name)
+                        .contextMenu {
+                            Button("Show in Finder") {
+                                openInFinder(url: buffer.url)
+                            }
+                            Button("Import ...") {
+                                showImporter = true
+                            }
+                        }
+                }
+                .onDeleteCommand {
+                    bufferManager.removeSelectedBuffers()
+                }
+                .contextMenu {
+                    Button("Import ...") {
+                        showImporter = true
+                    }
+                }
             }
         } detail: {
             GPXMapView(bufferManager: bufferManager, command: $mapViewCommand)
@@ -95,6 +114,16 @@ struct GPXBrowser: View {
     func importRecent() {
         if let url = loadBookmark() {
             importFiles([url])
+        }
+    }
+
+    func openInFinder(url: URL) {
+        let path = url.path
+        if FileManager.default.fileExists(atPath: path) {
+            NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: "")
+        } else {
+            let folderURL = url.deletingLastPathComponent()
+            NSWorkspace.shared.open(folderURL)
         }
     }
 
