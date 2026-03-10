@@ -19,18 +19,14 @@ extension GPXMapViewController {
     override func mouseDown(with event: NSEvent) {
         self.view.window?.makeFirstResponder(self)
 
-//        let location = mapView.convert(event.locationInWindow, from: nil)
-//        startPoint = location
-
-        startPoint = event.locationInWindow
+        startPoint = view.convert(event.locationInWindow, from: nil)
         isDragging = false
     }
 
     override func mouseDragged(with event: NSEvent) {
         guard let startPoint else { return }
 
-//        let current = mapView.convert(event.locationInWindow, from: nil)
-        let current = event.locationInWindow
+        let current = view.convert(event.locationInWindow, from: nil)
 
         let dx = current.x - startPoint.x
         let dy = current.y - startPoint.y
@@ -40,11 +36,9 @@ extension GPXMapViewController {
             isDragging = true
 
             if isSelectionMode {
-                let p1 = view.convert(startPoint, from: nil)
-                let p2 = view.convert(current, from: nil)
                 let rect = CGRect(
-                    x: min(p1.x, p2.x),
-                    y: min(p1.y, p2.y),
+                    x: min(startPoint.x, current.x),
+                    y: min(startPoint.y, current.y),
                     width: abs(dx),
                     height: abs(dy)
                 )
@@ -65,7 +59,7 @@ extension GPXMapViewController {
             // ...
         } else {
             guard let startPoint else { return }
-            let p = mapView.convert(startPoint, from: nil)
+            let p = mapView.convert(startPoint, from: view)
             if event.modifierFlags.contains(.shift) {
                 handleShiftClick(at: p)
             } else if event.modifierFlags.contains(.command) {
