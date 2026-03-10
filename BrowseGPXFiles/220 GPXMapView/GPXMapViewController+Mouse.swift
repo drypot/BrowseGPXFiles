@@ -55,8 +55,10 @@ extension GPXMapViewController {
     override func mouseUp(with event: NSEvent) {
         if isDragging {
             guard let path = selectionLayer.path else { return }
-            let _ = path.boundingBox
-            // ...
+            let rect = path.boundingBox
+            let region = mapView.convert(rect, toRegionFrom: view)
+            let mapRect = mapRect(from: region)
+            bufferManager.selectBuffers(in: mapRect)
         } else {
             guard let startPoint else { return }
             let p = mapView.convert(startPoint, from: view)
@@ -71,28 +73,29 @@ extension GPXMapViewController {
         startPoint = nil
         isDragging = false
         selectionLayer.isHidden = true
+        selectionLayer.path = nil
     }
 
     func handleClick(at point: NSPoint) {
         let (mapPoint, tolerance) = mapPoint(at: point)
-        beginGPXSelection(at: mapPoint, with: tolerance)
+        beginSelection(at: mapPoint, with: tolerance)
     }
 
     func handleShiftClick(at point: NSPoint) {
         let (mapPoint, tolerance) = mapPoint(at: point)
-        toggleGPXSelection(at: mapPoint, with: tolerance)
+        toggleSelection(at: mapPoint, with: tolerance)
     }
 
     func handleCmdClick(at point: NSPoint) {
         let (mapPoint, tolerance) = mapPoint(at: point)
-        toggleGPXSelection(at: mapPoint, with: tolerance)
+        toggleSelection(at: mapPoint, with: tolerance)
     }
 
-    func beginGPXSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         bufferManager.beginSelection(at: mapPoint, with: tolerance)
     }
 
-    func toggleGPXSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         bufferManager.toggleSelection(at: mapPoint, with: tolerance)
     }
 
@@ -103,5 +106,26 @@ extension GPXMapViewController {
         let tolerance = p1.distance(to: p2)
         return (p1, tolerance)
     }
-    
+
+    func mapRect(from region:MKCoordinateRegion) -> MKMapRect {
+        let topLeft = CLLocationCoordinate2D(
+            latitude: region.center.latitude + region.span.latitudeDelta / 2,
+            longitude: region.center.longitude - region.span.longitudeDelta / 2
+        )
+
+        let bottomRight = CLLocationCoordinate2D(
+            latitude: region.center.latitude - region.span.latitudeDelta / 2,
+            longitude: region.center.longitude + region.span.longitudeDelta / 2
+        )
+
+        let a = MKMapPoint(topLeft)
+        let b = MKMapPoint(bottomRight)
+
+        return MKMapRect(
+            x: min(a.x, b.x),
+            y: min(a.y, b.y),
+            width: abs(a.x - b.x),
+            height: abs(a.y - b.y)
+        )
+    }
 }

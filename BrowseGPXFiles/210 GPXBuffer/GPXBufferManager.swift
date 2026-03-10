@@ -160,7 +160,7 @@ public class GPXBufferManager {
     }
 
     public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
-        if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
+        if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
             if selectedBuffers.contains(buffer) {
                 deselectAllBuffers()
             } else {
@@ -173,7 +173,7 @@ public class GPXBufferManager {
     }
 
     public func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
-        if let buffer = nearestGPX(at: mapPoint, with: tolerance) {
+        if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
             if selectedBuffers.contains(buffer) {
                 deselectBuffer(buffer)
             } else {
@@ -182,7 +182,7 @@ public class GPXBufferManager {
         }
     }
 
-    func nearestGPX(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
+    func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
         let polyline = self.nearestPolyline(at: mapPoint, with: tolerance)
         return polyline.flatMap { polylineToBufferDic[$0] }
     }
@@ -206,5 +206,22 @@ public class GPXBufferManager {
         return nearest
     }
 
+    func selectBuffers(in rect: MKMapRect) {
+        var buffers: [GPXBuffer] = []
+        bufferLoop: for buffer in allBuffers {
+            guard !buffer.isSelected else { continue }
+            for polyline in buffer.polylines {
+                guard polyline.boundingMapRect.intersects(rect) else { continue }
+                let points = polyline.points()
+                for i in 0..<polyline.pointCount {
+                    if rect.contains(points[i]) {
+                        buffers.append(buffer)
+                        continue bufferLoop
+                    }
+                }
+            }
+        }
+        selectedBuffers.formUnion(buffers)
+    }
 }
 
