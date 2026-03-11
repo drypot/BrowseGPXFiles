@@ -105,6 +105,7 @@ struct GPXBrowser: View {
             await MainActor.run {
                 self.isLoading = false
                 self.mapViewCommand = .zoomToFit
+                // print(bufferManager.allBuffers.count)
             }
         }
     }

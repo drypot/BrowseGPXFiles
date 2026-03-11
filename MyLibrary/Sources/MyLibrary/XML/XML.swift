@@ -16,7 +16,7 @@ public final class BasicXMLParser: NSObject, XMLParserDelegate {
         case parsingError(Int)
     }
 
-    public final class XMLNode {
+    public struct XMLNode {
         public var name: String
         public var attributes:[String: String]
         public var content: String

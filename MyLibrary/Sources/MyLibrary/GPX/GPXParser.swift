@@ -27,7 +27,7 @@ public struct GPXParser {
     }
     
     private func parse(rootNode: XMLNode) -> GPX {
-        let gpx = GPX()
+        var gpx = GPX()
 
         gpx.creator = rootNode.attributes["creator"] ?? ""
         gpx.version = rootNode.attributes["version"] ?? ""
@@ -51,7 +51,7 @@ public struct GPXParser {
     }
     
     private func parse(waypointNode: XMLNode) -> GPXWaypoint {
-        let waypoint = GPXWaypoint()
+        var waypoint = GPXWaypoint()
         waypoint.point = parse(pointNode: waypointNode)
         waypoint.name = content(of: waypointNode, tag: "name")
         waypoint.comment = content(of: waypointNode, tag: "cmt")
@@ -62,7 +62,7 @@ public struct GPXParser {
     }
     
     private func parse(trackNode: XMLNode) -> GPXTrack {
-        let track = GPXTrack()
+        var track = GPXTrack()
         track.name = content(of: trackNode, tag: "name")
         track.comment = content(of: trackNode, tag: "cmt")
         track.description = content(of: trackNode, tag: "desc")
@@ -74,7 +74,7 @@ public struct GPXParser {
     }
     
     private func parse(segmentNode: XMLNode) -> GPXSegment {
-        let segment = GPXSegment()
+        var segment = GPXSegment()
         for pointNode in segmentNode.children {
             if pointNode.name != "trkpt" { continue }
             let p = parse(pointNode: pointNode)
