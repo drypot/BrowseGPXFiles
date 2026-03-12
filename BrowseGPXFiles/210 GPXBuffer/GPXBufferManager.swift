@@ -99,7 +99,7 @@ public class GPXBufferManager {
         var buffers: [GPXBuffer] = []
 
         for url in try GPXFileURLCollector().collectRecursively(from: url) {
-            let exist = await self.allBuffers.contains { $0.url == url }
+            let exist = await self.allBuffers.contains { $0.gpx.url == url }
             guard !exist else { continue }
             //print("loading: \(url.absoluteString)")
             let buffer = try GPXBuffer(contentOf: url)
@@ -113,6 +113,27 @@ public class GPXBufferManager {
 //            //        undoManager?.enableUndoRegistration()
 //            ...
 //        }
+    }
+
+    // MARK: - Clipboard
+
+    func copyToClipboard() {
+        let clipboard = Clipboard.shared
+        var gpxCopies: [GPX] = []
+        for buffer in selectedBuffers {
+            gpxCopies.append(buffer.gpx)
+        }
+        clipboard.gpxCopies = gpxCopies
+    }
+
+    func paseteFromClipboard() {
+        let clipboard = Clipboard.shared
+        var buffers: [GPXBuffer] = []
+        for gpx in clipboard.gpxCopies {
+            let buffer = GPXBuffer(gpx: gpx)
+            buffers.append(buffer)
+        }
+        addBuffers(buffers)
     }
 
     // MARK: - Select

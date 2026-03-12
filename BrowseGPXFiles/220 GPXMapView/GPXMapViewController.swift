@@ -21,6 +21,7 @@ final class GPXMapViewController: NSViewController {
     var selectionLayer = CAShapeLayer()
 
     let bufferManager: GPXBufferManager
+    let viewState: GPXBrowser.ViewState
 
     override var acceptsFirstResponder: Bool { true }
 
@@ -28,8 +29,9 @@ final class GPXMapViewController: NSViewController {
     //        return document?.undoManager
     //    }
 
-    init(_ bufferManager: GPXBufferManager) {
+    init(_ bufferManager: GPXBufferManager, _ viewState: GPXBrowser.ViewState) {
         self.bufferManager = bufferManager
+        self.viewState = viewState
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -12,18 +12,15 @@ import MyLibrary
 
 @Observable
 nonisolated public final class GPXBuffer: Identifiable, Hashable {
-    public private(set) var url: URL
-    public private(set) var name: String
-
     public private(set) var gpx: GPX
     public private(set) var polylines: [MKPolyline] = []
     public var isSelected = false
     
-    public var id: URL { url }
+    public var id: ObjectIdentifier { ObjectIdentifier(self) }
+    public var name: String { gpx.name }
+    public var url: URL? { gpx.url }
 
-    public init(url: URL, gpx: GPX) {
-        self.url = url
-        self.name = url.lastPathComponent
+    public init(gpx: GPX) {
         self.gpx = gpx
         updatePolylines()
     }
@@ -31,8 +28,10 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
     public convenience init(contentOf url: URL) throws {
         // print("processing: \(url.path)")
         let data = try Data(contentsOf: url)
-        let gpx = try GPXParser().parse(data: data)
-        self.init(url: url, gpx: gpx)
+        var gpx = try GPXParser().parse(data: data)
+        gpx.url = url
+        gpx.name = url.lastPathComponent
+        self.init(gpx: gpx)
     }
 
     // MARK: - Polyline
