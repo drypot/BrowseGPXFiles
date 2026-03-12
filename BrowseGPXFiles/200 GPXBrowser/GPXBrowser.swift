@@ -16,7 +16,7 @@ struct GPXBrowser: View {
 
     @State private var showImporter = false
     @State private var isLoading = false
-    @State private var mapViewCommand: CommandType = .none
+    @State private var mapViewAction: Action = .none
 
     var body: some View {
         NavigationSplitView {
@@ -46,12 +46,15 @@ struct GPXBrowser: View {
                 }
             }
         } detail: {
-            GPXMapView(bufferManager: bufferManager, command: $mapViewCommand)
+            GPXMapView(bufferManager: bufferManager, action: $mapViewAction)
                 .ignoresSafeArea()
         }
-        .focusedSceneValue(\.runCommand) { type in
-            runCommand(type)
+        .overlay {
+            if isLoading {
+                ProgressOverlay(message: "Importing ...")
+            }
         }
+        .focusedSceneValue(\.performAction, performAction)
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
             showImporter = false
             if case .success(let urls) = result {
@@ -66,10 +69,18 @@ struct GPXBrowser: View {
         .dropDestination(for: URL.self) { urls, session in
             importFiles(urls)
         }
-        .overlay {
-            if isLoading {
-                ProgressOverlay(message: "Importing ...")
-            }
+    }
+
+    func performAction(_ action: Action) {
+        switch action {
+        case .importFolders:
+            showImporter = true
+        case .importRecent:
+            importRecent()
+        case .zoomToFit:
+            mapViewAction = action
+        default:
+            break
         }
     }
 
@@ -112,7 +123,7 @@ struct GPXBrowser: View {
 
             await MainActor.run {
                 self.isLoading = false
-                self.mapViewCommand = .zoomToFit
+                self.mapViewAction = .zoomToFit
                 // print(bufferManager.allBuffers.count)
             }
         }
@@ -131,19 +142,6 @@ struct GPXBrowser: View {
         } else {
             let folderURL = url.deletingLastPathComponent()
             NSWorkspace.shared.open(folderURL)
-        }
-    }
-
-    func runCommand(_ type: CommandType) {
-        switch type {
-        case .importFolders:
-            showImporter = true
-        case .importRecent:
-            importRecent()
-        case .zoomToFit:
-            mapViewCommand = type
-        default:
-            break
         }
     }
 }

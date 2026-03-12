@@ -8,33 +8,33 @@
 import SwiftUI
 
 struct GPXBrowserCommands: Commands {
-    @FocusedValue(\.runCommand) private var runCommand
+    @FocusedValue(\.performAction) private var performAction
 
     var body: some Commands {
         CommandGroup(replacing: .importExport) {
             Button("Import ...", systemImage: "square.and.arrow.down") {
-                runCommand?(.importFolders)
+                performAction?(.importFolders)
             }
             .keyboardShortcut("i", modifiers: .command)
 
             Button("Import Recent", systemImage: "square.and.arrow.down.badge.clock") {
-                runCommand?(.importRecent)
+                performAction?(.importRecent)
             }
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         CommandGroup(after: .toolbar) {
             Button("Zoom In", systemImage: "plus.magnifyingglass") {
-                runCommand?(.zoomIn)
+                performAction?(.zoomIn)
             }
             .keyboardShortcut("+", modifiers: .command)
 
             Button("Zoom Out", systemImage: "minus.magnifyingglass") {
-                runCommand?(.zoomOut)
+                performAction?(.zoomOut)
             }
             .keyboardShortcut("-", modifiers: .command)
 
             Button("Zoom to Fit", systemImage: "viewfinder") {
-                runCommand?(.zoomToFit)
+                performAction?(.zoomToFit)
             }
             .keyboardShortcut("0", modifiers: .command)
         }

@@ -11,7 +11,7 @@ import MyLibrary
 
 struct GPXMapView: NSViewControllerRepresentable {
     var bufferManager: GPXBufferManager
-    @Binding var command: CommandType
+    @Binding var action: Action
 
     func makeNSViewController(context: Context) -> GPXMapViewController {
         return GPXMapViewController(bufferManager)
@@ -20,19 +20,19 @@ struct GPXMapView: NSViewControllerRepresentable {
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {
         let _ = bufferManager.selectedBuffers.count
         controller.updateOverlays()
-        runCommand(controller)
+        performAction(controller)
     }
 
-    func runCommand(_ controller: GPXMapViewController) {
-        if command != .none {
-            switch command {
+    func performAction(_ controller: GPXMapViewController) {
+        if action != .none {
+            Task {
+                action = .none
+            }
+            switch action {
             case .zoomToFit:
                 controller.zoomToFitAllOverlays()
             default:
                 break
-            }
-            Task {
-                command = .none
             }
         }
     }
@@ -40,5 +40,5 @@ struct GPXMapView: NSViewControllerRepresentable {
 
 #Preview {
     let bufferManager = GPXBufferManager()
-    GPXMapView(bufferManager: bufferManager, command: .constant(.none))
+    GPXMapView(bufferManager: bufferManager, action: .constant(.none))
 }
