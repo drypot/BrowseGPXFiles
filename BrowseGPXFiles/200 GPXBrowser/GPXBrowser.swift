@@ -91,6 +91,8 @@ struct GPXBrowser: View {
         isLoading = true
 
         Task.detached(priority: .background) {
+            let start = DispatchTime.now()
+
             do {
                 for url in urls {
                     let accessing = url.startAccessingSecurityScopedResource()
@@ -102,6 +104,12 @@ struct GPXBrowser: View {
             } catch {
                 print("failed to import GPX files: \(error.localizedDescription)")
             }
+
+            let end = DispatchTime.now()
+            let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
+            print("import: \(timeInterval) seconds")
+
             await MainActor.run {
                 self.isLoading = false
                 self.mapViewCommand = .zoomToFit
