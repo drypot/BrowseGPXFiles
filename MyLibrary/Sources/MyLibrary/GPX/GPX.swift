@@ -7,11 +7,12 @@
 
 import Foundation
 import MapKit
+import CoreTransferable
 
 // 참고
 // https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/Coordinate.swift
 
-public struct GPX: Codable, Sendable {
+public struct GPX: Codable, Sendable, Transferable {
     public var url: URL?
     public var name: String = ""
 
@@ -23,6 +24,10 @@ public struct GPX: Codable, Sendable {
     public var tracks: [GPXTrack] = []
 
     public init() {}
+
+    public static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .gpxInternal)
+    }
 }
 
 public struct GPXMetadata: Codable, Sendable {

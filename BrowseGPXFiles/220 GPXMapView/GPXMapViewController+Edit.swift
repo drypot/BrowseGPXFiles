@@ -20,12 +20,10 @@ extension GPXMapViewController {
     }
 
     @IBAction func copy(_ sender: Any) {
-        print("copy")
         bufferManager.copyToClipboard()
     }
 
     @IBAction func paste(_ sender: Any) {
-        print("paste")
         bufferManager.paseteFromClipboard()
         viewState.zoomToFit = true
     }

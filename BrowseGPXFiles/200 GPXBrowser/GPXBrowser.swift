@@ -22,6 +22,8 @@ struct GPXBrowser: View {
     @State private var bufferManager = GPXBufferManager()
     @State private var viewState = ViewState()
 
+    @FocusState private var isFocused: Bool
+
     var body: some View {
         NavigationSplitView {
             if bufferManager.sortedBuffers.isEmpty {
@@ -34,7 +36,7 @@ struct GPXBrowser: View {
                         .contextMenu {
                             Button("Show in Finder") {
                                 guard let url = buffer.url else { return }
-                                openInFinder(url: url)
+                                Finder.shared.open(url: url)
                             }
                             Button("Import ...") {
                                 viewState.showImporter = true
@@ -137,16 +139,6 @@ struct GPXBrowser: View {
     func importRecent() {
         if let url = loadBookmark() {
             importFiles([url])
-        }
-    }
-
-    func openInFinder(url: URL) {
-        let path = url.path
-        if FileManager.default.fileExists(atPath: path) {
-            NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: "")
-        } else {
-            let folderURL = url.deletingLastPathComponent()
-            NSWorkspace.shared.open(folderURL)
         }
     }
 }

@@ -117,19 +117,26 @@ public class GPXBufferManager {
 
     // MARK: - Clipboard
 
+//    func gpxCopies() -> [GPX] {
+//        return selectedBuffers.map(\.gpx)
+//    }
+
     func copyToClipboard() {
-        let clipboard = Clipboard.shared
         var gpxCopies: [GPX] = []
         for buffer in selectedBuffers {
             gpxCopies.append(buffer.gpx)
         }
-        clipboard.gpxCopies = gpxCopies
+        Clipboard.shared.gpxCopies = gpxCopies
     }
 
+//    func paste(_ gpxCopies: [GPX]) {
+//        let buffers = gpxCopies.map { GPXBuffer(gpx: $0) }
+//        addBuffers(buffers)
+//    }
+
     func paseteFromClipboard() {
-        let clipboard = Clipboard.shared
         var buffers: [GPXBuffer] = []
-        for gpx in clipboard.gpxCopies {
+        for gpx in Clipboard.shared.gpxCopies {
             let buffer = GPXBuffer(gpx: gpx)
             buffers.append(buffer)
         }
@@ -203,7 +210,7 @@ public class GPXBufferManager {
         }
     }
 
-    func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
+    public func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
         let polyline = self.nearestPolyline(at: mapPoint, with: tolerance)
         return polyline.flatMap { polylineToBufferDic[$0] }
     }

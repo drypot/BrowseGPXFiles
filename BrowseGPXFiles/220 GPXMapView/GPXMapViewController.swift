@@ -20,6 +20,8 @@ final class GPXMapViewController: NSViewController {
     var tolerance: CGFloat = 5.0
     var selectionLayer = CAShapeLayer()
 
+    var contextPoint: NSPoint?
+
     let bufferManager: GPXBufferManager
     let viewState: GPXBrowser.ViewState
 
