@@ -113,8 +113,8 @@ public class GPXBufferManager {
 
     // MARK: - File I/O
 
-    nonisolated public func importFiles(_ urls: [URL]) async throws {
-        let task = Task.detached(priority: .background) {
+    public func importFiles(_ urls: [URL]) async throws {
+        let _ = try await Task.detached {
             var buffers: [GPXBuffer] = []
             for url in urls {
                 let accessing = url.startAccessingSecurityScopedResource()
@@ -127,8 +127,7 @@ public class GPXBufferManager {
                 }
             }
             await self.addBuffers(buffers)
-        }
-        try await task.value
+        }.value
     }
 
     // MARK: - Clipboard

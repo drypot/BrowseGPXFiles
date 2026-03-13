@@ -21,8 +21,7 @@ struct GPXMapView: NSViewControllerRepresentable {
 
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {
 //        let _ = bufferManager.allBuffers.count
-        let _ = bufferManager.selectedBuffers.count
-        controller.updateOverlays()
+//        let _ = bufferManager.selectedBuffers.count
         if viewState.zoomToFit {
             Task { viewState.zoomToFit = false }
             controller.zoomToFitAllOverlays()

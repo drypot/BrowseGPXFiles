@@ -87,10 +87,6 @@ final class GPXMapViewController: NSViewController {
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요
     }
 
-    func updateOverlays() {
-//        bufferManager.updateMapView(mapView)
-    }
-
     func zoomToFitAllOverlays() {
         var zoomRect = MKMapRect.null
         mapView.overlays.forEach { overlay in

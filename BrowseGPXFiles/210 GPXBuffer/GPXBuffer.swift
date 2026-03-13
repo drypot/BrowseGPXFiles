@@ -13,16 +13,27 @@ import MyLibrary
 @Observable
 nonisolated public final class GPXBuffer: Identifiable, Hashable {
     public private(set) var gpx: GPX
-    public private(set) var polylines: [MKPolyline] = []
+    public private(set) var polylines: [MKPolyline]
     public var isSelected = false
     
     public var id: ObjectIdentifier { ObjectIdentifier(self) }
     public var name: String { gpx.name }
     public var url: URL? { gpx.url }
 
-    public init(gpx: GPX) {
+    public init(gpx: GPX, polylines: [MKPolyline]) {
         self.gpx = gpx
-        updatePolylines()
+        self.polylines = polylines
+    }
+
+    public convenience init(gpx: GPX) {
+        var polylines: [MKPolyline] = []
+        for track in gpx.tracks {
+            for segment in track.segments {
+                let polyline = GPXUtility.makePolyline(from: segment)
+                polylines.append(polyline)
+            }
+        }
+        self.init(gpx: gpx, polylines: polylines)
     }
 
     public convenience init(contentOf url: URL) throws {
@@ -32,18 +43,6 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
         gpx.url = url
         gpx.name = url.lastPathComponent
         self.init(gpx: gpx)
-    }
-
-    // MARK: - Polyline
-
-    func updatePolylines() {
-        polylines.removeAll()
-        for track in gpx.tracks {
-            for segment in track.segments {
-                let polyline = GPXUtility.makePolyline(from: segment)
-                polylines.append(polyline)
-            }
-        }
     }
 
     // MARK: - Equatable, Hashable
