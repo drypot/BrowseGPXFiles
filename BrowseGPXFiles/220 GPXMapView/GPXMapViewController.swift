@@ -88,7 +88,7 @@ final class GPXMapViewController: NSViewController {
     }
 
     func updateOverlays() {
-        bufferManager.updateMapView(mapView)
+//        bufferManager.updateMapView(mapView)
     }
 
     func zoomToFitAllOverlays() {

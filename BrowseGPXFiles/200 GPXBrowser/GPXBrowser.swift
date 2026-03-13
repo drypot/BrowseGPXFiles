@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 import MyLibrary
 
 struct GPXBrowser: View {
+    @Environment(\.undoManager) var undoManager
     @Environment(SettingsData.self) var settings
 
     @Observable
@@ -61,6 +62,9 @@ struct GPXBrowser: View {
                 ProgressOverlay(message: "Importing ...")
             }
         }
+        .onAppear {
+            bufferManager.undoManager = undoManager
+        }
         .focusedSceneValue(\.performAction, performAction)
         .fileImporter(isPresented: $viewState.showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
             viewState.showImporter = false
@@ -108,17 +112,11 @@ struct GPXBrowser: View {
         guard viewState.isLoading == false else { return }
         viewState.isLoading = true
 
-        Task.detached(priority: .background) {
+        Task {
             let start = DispatchTime.now()
 
             do {
-                for url in urls {
-                    let accessing = url.startAccessingSecurityScopedResource()
-                    defer {
-                        if accessing { url.stopAccessingSecurityScopedResource() }
-                    }
-                    try await bufferManager.importGPXFiles(from: url)
-                }
+                try await bufferManager.importFiles(urls)
             } catch {
                 print("failed to import GPX files: \(error.localizedDescription)")
             }
@@ -128,11 +126,9 @@ struct GPXBrowser: View {
             let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
             print("import: \(timeInterval) seconds")
 
-            await MainActor.run {
-                self.viewState.isLoading = false
-                self.viewState.zoomToFit = true
-                // print(bufferManager.allBuffers.count)
-            }
+            self.viewState.isLoading = false
+            self.viewState.zoomToFit = true
+            // print(bufferManager.allBuffers.count)
         }
     }
 

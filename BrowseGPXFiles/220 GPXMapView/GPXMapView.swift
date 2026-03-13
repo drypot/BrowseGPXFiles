@@ -14,7 +14,9 @@ struct GPXMapView: NSViewControllerRepresentable {
     var viewState: GPXBrowser.ViewState
 
     func makeNSViewController(context: Context) -> GPXMapViewController {
-        return GPXMapViewController(bufferManager, viewState)
+        let controller = GPXMapViewController(bufferManager, viewState)
+        bufferManager.mapView = controller.mapView
+        return controller
     }
 
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {

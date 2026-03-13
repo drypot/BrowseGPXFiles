@@ -12,43 +12,47 @@ import MyLibrary
 
 @MainActor @Observable
 public class GPXBufferManager {
-    private let mapViewUpdater = MapViewUpdater()
-
-    private var _buffersUpdated = true
-    private(set) var allBuffers: Set<GPXBuffer> = [] {
-        didSet {
-            _buffersUpdated = true
-        }
-    }
+    private var _allBuffers: Set<GPXBuffer> = []
+    private var _polylineDic: [MKPolyline: GPXBuffer] = [:]
 
     private var _sortedBuffers: [GPXBuffer] = []
+    private var _sortedBuffersShouldBeUpdated = true
+
+    public weak var undoManager: UndoManager?
+    public weak var mapView: MKMapView?
+
+    public var allBuffers: Set<GPXBuffer> {
+        return _allBuffers
+    }
+
     public var sortedBuffers: [GPXBuffer] {
-        if _buffersUpdated {
-            _sortedBuffers = Array(allBuffers).sorted { $0.name < $1.name }
-            _buffersUpdated = false
+        if _sortedBuffersShouldBeUpdated {
+            _sortedBuffers = Array(_allBuffers).sorted { $0.name < $1.name }
+            _sortedBuffersShouldBeUpdated = false
         }
         return _sortedBuffers
     }
 
-    private var polylineToBufferDic: [MKPolyline: GPXBuffer] = [:]
-
+    // SwiftUI List 뷰가 이 값을 직접 조작하는 경우를 고려해야 한다.
     public var selectedBuffers: Set<GPXBuffer> = [] {
         didSet {
             let inserted = selectedBuffers.subtracting(oldValue)
             let removed = oldValue.subtracting(selectedBuffers)
 
-            if !inserted.isEmpty {
-                for buffer in inserted {
-                    buffer.isSelected = true
+            for buffer in inserted {
+                undoManager?.registerUndo(withTarget: self) {
+                    $0.selectedBuffers.remove(buffer)
                 }
-                mapViewUpdater.queueUpdateColor(Array(inserted))
+                buffer.isSelected = true
+                updateStrokeColor(of: buffer)
             }
 
-            if !removed.isEmpty {
-                for buffer in removed {
-                    buffer.isSelected = false
+            for buffer in removed {
+                undoManager?.registerUndo(withTarget: self) {
+                    $0.selectedBuffers.insert(buffer)
                 }
-                mapViewUpdater.queueUpdateColor(Array(removed))
+                buffer.isSelected = false
+                updateStrokeColor(of: buffer)
             }
         }
     }
@@ -58,61 +62,81 @@ public class GPXBufferManager {
     // MARK: - Insert / Delete
 
     private func addBuffers(_ buffers: [GPXBuffer]) {
-        //        undoManager?.registerUndo(withTarget: self) {
-        //            $0.removeGPXCaches(buffers)
-        //        }
-        mapViewUpdater.queueAddBuffers(buffers)
-        self.allBuffers.formUnion(buffers)
+        undoManager?.registerUndo(withTarget: self) {
+            $0.removeBuffers(buffers)
+        }
+        _allBuffers.formUnion(buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
-                polylineToBufferDic[polyline] = buffer
+                _polylineDic[polyline] = buffer
             }
         }
+        if let mapView {
+            for buffer in buffers {
+                mapView.addOverlays(buffer.polylines)
+            }
+        }
+        _sortedBuffersShouldBeUpdated = true
     }
 
     private func removeBuffers(_ buffers: [GPXBuffer]) {
-        //        undoManager?.registerUndo(withTarget: self) {
-        //            $0.addGPXCaches(buffers)
-        //        }
-        mapViewUpdater.queueRemoveBuffers(buffers)
-        self.allBuffers.subtract(buffers)
+        undoManager?.registerUndo(withTarget: self) {
+            $0.addBuffers(buffers)
+        }
+        _allBuffers.subtract(buffers)
         for buffer in buffers {
             for polyline in buffer.polylines {
-                polylineToBufferDic.removeValue(forKey: polyline)
+                _polylineDic.removeValue(forKey: polyline)
             }
+        }
+        if let mapView {
+            for buffer in buffers {
+                mapView.removeOverlays(buffer.polylines)
+            }
+        }
+        _sortedBuffersShouldBeUpdated = true
+    }
+
+    public func removeSelectedBuffers() {
+        if !selectedBuffers.isEmpty {
+            let buffers = Array(selectedBuffers)
+            selectedBuffers.removeAll()
+            removeBuffers(buffers)
         }
     }
 
+
     // MARK: - Polyline
 
-    public func updateMapView(_ mapView: MKMapView) {
-        mapViewUpdater.flush(to: mapView)
-    }
-
     public func buffer(from polyline: MKPolyline) -> GPXBuffer? {
-        return polylineToBufferDic[polyline]
+        return _polylineDic[polyline]
     }
 
     // MARK: - File I/O
 
-    nonisolated public func importGPXFiles(from url: URL) async throws {
-        var buffers: [GPXBuffer] = []
-
-        for url in try GPXFileURLCollector().collectRecursively(from: url) {
-            let exist = await self.allBuffers.contains { $0.gpx.url == url }
-            guard !exist else { continue }
-            //print("loading: \(url.absoluteString)")
-            let buffer = try GPXBuffer(contentOf: url)
-            buffers.append(buffer)
+    nonisolated public func importFiles(_ urls: [URL]) async throws {
+        let task = Task.detached(priority: .background) {
+            nonisolated(unsafe) var buffers: [GPXBuffer] = []
+            for url in urls {
+                let accessing = url.startAccessingSecurityScopedResource()
+                defer {
+                    if accessing { url.stopAccessingSecurityScopedResource() }
+                }
+                for url in try GPXFileURLCollector().collectRecursively(from: url) {
+//                    let exist = await self._allBuffers.contains { $0.gpx.url == url }
+//                    guard !exist else { continue }
+//                    print("loading: \(url.absoluteString)")
+                    let buffer = try GPXBuffer(contentOf: url)
+                    buffers.append(buffer)
+                }
+            }
+            await MainActor.run {
+                self.undoManager?.disableUndoRegistration()
+                self.addBuffers(buffers)
+                self.undoManager?.enableUndoRegistration()
+            }
         }
-        await self.addBuffers(buffers)
-
-//        await MainActor.run {
-//            //        undoManager?.disableUndoRegistration()
-////            self.addBuffers(buffers)
-//            //        undoManager?.enableUndoRegistration()
-//            ...
-//        }
+        try await task.value
     }
 
     // MARK: - Clipboard
@@ -145,51 +169,43 @@ public class GPXBufferManager {
 
     // MARK: - Select
 
-    func selectBuffer(_ buffer: GPXBuffer) {
-        //        undoManager?.registerUndo(withTarget: self) {
-        //            $0.deselectGPXCache(buffer)
-        //        }
+    func updateStrokeColor(of buffer: GPXBuffer) {
+        for polyline in buffer.polylines {
+            if let renderer = mapView?.renderer(for: polyline) as? MKPolylineRenderer {
+                renderer.strokeColor = buffer.isSelected ? .red : .blue
+            }
+        }
+    }
+
+    public func selectBuffer(_ buffer: GPXBuffer) {
         selectedBuffers.insert(buffer)
     }
 
-    func deselectBuffer(_ buffer: GPXBuffer) {
-        //        undoManager?.registerUndo(withTarget: self) {
-        //            $0.selectGPXCache(buffer)
-        //        }
-        //        buffer.isSelected = false
+    public func deselectBuffer(_ buffer: GPXBuffer) {
         selectedBuffers.remove(buffer)
     }
 
     public func selectAllBuffers() {
-        selectedBuffers = self.allBuffers
-        //        for buffer in buffers {
-        //            if !buffer.isSelected {
-        //                selectBuffer(buffer)
-        //            }
-        //        }
+        selectedBuffers = _allBuffers
+//        for buffer in _allBuffers {
+//            if !buffer.isSelected {
+//                selectBuffer(buffer)
+//            }
+//        }
     }
 
     public func deselectAllBuffers() {
-        //        undoManager? ...
-        //        for buffer in buffers {
-        //            if buffer.isSelected {
-        //                deselectBuffer(buffer)
-        //            }
-        //        }
-        selectedBuffers.removeAll()
-    }
-
-    public func removeSelectedBuffers() {
-        //        let selectedBuffers = buffers.filter { $0.isSelected }
-        if !selectedBuffers.isEmpty {
-            removeBuffers(Array(selectedBuffers))
-            selectedBuffers.removeAll()
-        }
+        selectedBuffers = []
+//        for buffer in _allBuffers {
+//            if buffer.isSelected {
+//                deselectBuffer(buffer)
+//            }
+//        }
     }
 
     public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
-            if selectedBuffers.contains(buffer) {
+            if buffer.isSelected {
                 deselectAllBuffers()
             } else {
                 deselectAllBuffers()
@@ -202,7 +218,7 @@ public class GPXBufferManager {
 
     public func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
-            if selectedBuffers.contains(buffer) {
+            if buffer.isSelected {
                 deselectBuffer(buffer)
             } else {
                 selectBuffer(buffer)
@@ -212,13 +228,13 @@ public class GPXBufferManager {
 
     public func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
         let polyline = self.nearestPolyline(at: mapPoint, with: tolerance)
-        return polyline.flatMap { polylineToBufferDic[$0] }
+        return polyline.flatMap { _polylineDic[$0] }
     }
 
     func nearestPolyline(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> MKPolyline? {
         var nearest: MKPolyline?
         var minDistance: CLLocationDistance = .greatestFiniteMagnitude
-        for buffer in allBuffers {
+        for buffer in _allBuffers {
             for polyline in buffer.polylines {
                 let rect = polyline.boundingMapRect.insetBy(dx: -tolerance, dy: -tolerance)
                 if !rect.contains(mapPoint) {
@@ -236,7 +252,7 @@ public class GPXBufferManager {
 
     func selectBuffers(in rect: MKMapRect) {
         var buffers: [GPXBuffer] = []
-        bufferLoop: for buffer in allBuffers {
+        bufferLoop: for buffer in _allBuffers {
             guard !buffer.isSelected else { continue }
             for polyline in buffer.polylines {
                 guard polyline.boundingMapRect.intersects(rect) else { continue }
@@ -249,7 +265,9 @@ public class GPXBufferManager {
                 }
             }
         }
-        selectedBuffers.formUnion(buffers)
+        for buffer in buffers {
+            selectBuffer(buffer)
+        }
     }
 }
 

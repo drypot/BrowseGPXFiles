@@ -12,11 +12,11 @@ import MyLibrary
 extension GPXMapViewController {
 
     @IBAction func undo(_ sender: Any?) {
-//        undoManager?.undo()
+        undoManager?.undo()
     }
 
     @IBAction  func redo(_ sender: Any?) {
-//        undoManager?.redo()
+        undoManager?.redo()
     }
 
     @IBAction func copy(_ sender: Any) {
