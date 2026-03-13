@@ -105,7 +105,6 @@ public class GPXBufferManager {
         }
     }
 
-
     // MARK: - Polyline
 
     public func buffer(from polyline: MKPolyline) -> GPXBuffer? {
@@ -116,34 +115,23 @@ public class GPXBufferManager {
 
     nonisolated public func importFiles(_ urls: [URL]) async throws {
         let task = Task.detached(priority: .background) {
-            nonisolated(unsafe) var buffers: [GPXBuffer] = []
+            var buffers: [GPXBuffer] = []
             for url in urls {
                 let accessing = url.startAccessingSecurityScopedResource()
                 defer {
                     if accessing { url.stopAccessingSecurityScopedResource() }
                 }
                 for url in try GPXFileURLCollector().collectRecursively(from: url) {
-//                    let exist = await self._allBuffers.contains { $0.gpx.url == url }
-//                    guard !exist else { continue }
-//                    print("loading: \(url.absoluteString)")
                     let buffer = try GPXBuffer(contentOf: url)
                     buffers.append(buffer)
                 }
             }
-            await MainActor.run {
-                self.undoManager?.disableUndoRegistration()
-                self.addBuffers(buffers)
-                self.undoManager?.enableUndoRegistration()
-            }
+            await self.addBuffers(buffers)
         }
         try await task.value
     }
 
     // MARK: - Clipboard
-
-//    func gpxCopies() -> [GPX] {
-//        return selectedBuffers.map(\.gpx)
-//    }
 
     func copyToClipboard() {
         var gpxCopies: [GPX] = []
@@ -152,11 +140,6 @@ public class GPXBufferManager {
         }
         Clipboard.shared.gpxCopies = gpxCopies
     }
-
-//    func paste(_ gpxCopies: [GPX]) {
-//        let buffers = gpxCopies.map { GPXBuffer(gpx: $0) }
-//        addBuffers(buffers)
-//    }
 
     func paseteFromClipboard() {
         var buffers: [GPXBuffer] = []

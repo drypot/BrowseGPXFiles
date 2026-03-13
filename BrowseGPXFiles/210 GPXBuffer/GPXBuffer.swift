@@ -46,38 +46,6 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
         }
     }
 
-    // MARK: - NSObject
-
-//    override func isEqual(_ object: Any?) -> Bool {
-//        guard let other = object as? Self else { return false }
-//        return self === other
-//    }
-//
-//    override var hash: Int {
-//        return ObjectIdentifier(self).hashValue
-//    }
-//
-//    override var description: String {
-//        String(describing: gpx)
-//    }
-
-    // MARK: - Comparable
-
-//    static func < (lhs: GPXCache, rhs: GPXCache) -> Bool {
-//        return lhs.filename < rhs.filename
-//    }
-//
-//    @objc func compare(_ object: Any?) -> ComparisonResult {
-//        guard let other = object as? GPXCache else { return .orderedSame }
-//        if self < other {
-//            return .orderedAscending
-//        } else if self > other {
-//            return .orderedDescending
-//        } else {
-//            return .orderedSame
-//        }
-//    }
-
     // MARK: - Equatable, Hashable
 
     public static func == (lhs: GPXBuffer, rhs: GPXBuffer) -> Bool {

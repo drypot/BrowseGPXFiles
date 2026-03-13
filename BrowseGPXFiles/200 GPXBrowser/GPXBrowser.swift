@@ -128,7 +128,6 @@ struct GPXBrowser: View {
 
             self.viewState.isLoading = false
             self.viewState.zoomToFit = true
-            // print(bufferManager.allBuffers.count)
         }
     }
 
