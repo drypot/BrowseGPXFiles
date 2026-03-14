@@ -116,7 +116,8 @@ struct GPXBrowser: View {
             let start = DispatchTime.now()
 
             do {
-                try await bufferManager.importFiles(urls)
+                //try await bufferManager.importFiles(urls)
+                try await bufferManager.importFilesParallel(urls)
             } catch {
                 print("failed to import GPX files: \(error.localizedDescription)")
             }

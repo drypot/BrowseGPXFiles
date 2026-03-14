@@ -113,21 +113,45 @@ public class GPXBufferManager {
 
     // MARK: - File I/O
 
+    @concurrent
     public func importFiles(_ urls: [URL]) async throws {
-        let _ = try await Task.detached {
-            var buffers: [GPXBuffer] = []
+        var buffers: [GPXBuffer] = []
+        for url in urls {
+            let accessing = url.startAccessingSecurityScopedResource()
+            defer { if accessing { url.stopAccessingSecurityScopedResource() } }
+            for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                let buffer = try GPXBuffer(contentOf: url)
+                buffers.append(buffer)
+            }
+        }
+        await self.addBuffers(buffers)
+    }
+
+    @concurrent
+    public func importFilesParallel(_ urls: [URL]) async throws {
+        nonisolated struct Box: @unchecked Sendable {
+            let buffer: GPXBuffer
+        }
+        try await withThrowingTaskGroup(of: Box.self) { group in
+            var accessing: [URL] = []
             for url in urls {
-                let accessing = url.startAccessingSecurityScopedResource()
-                defer {
-                    if accessing { url.stopAccessingSecurityScopedResource() }
-                }
+                if url.startAccessingSecurityScopedResource() { accessing.append(url) }
                 for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                    let buffer = try GPXBuffer(contentOf: url)
-                    buffers.append(buffer)
+                    group.addTask(priority: .userInitiated) {
+                        let buffer = try GPXBuffer(contentOf: url)
+                        return Box(buffer: buffer)
+                    }
                 }
             }
+            var buffers: [GPXBuffer] = []
+            for try await box in group {
+                buffers.append(box.buffer)
+            }
             await self.addBuffers(buffers)
-        }.value
+            for url in accessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
     }
 
     // MARK: - Clipboard
