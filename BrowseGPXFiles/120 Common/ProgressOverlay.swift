@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProgressOverlay: View {
-    let message: String?
+    let message: String
 
     var body: some View {
         ZStack {
@@ -20,7 +20,7 @@ struct ProgressOverlay: View {
                     .controlSize(.large)
                     .tint(.white)
 
-                if let message {
+                if !message.isEmpty {
                     Text(message)
                         .font(.callout)
                         .foregroundStyle(.white)
@@ -35,5 +35,5 @@ struct ProgressOverlay: View {
 }
 
 #Preview {
-    ProgressOverlay(message: "Loading...")
+    ProgressOverlay(message: "")
 }

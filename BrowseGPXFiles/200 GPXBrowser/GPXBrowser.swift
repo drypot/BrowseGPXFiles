@@ -39,7 +39,7 @@ struct GPXBrowser: View {
                                 guard let url = buffer.url else { return }
                                 Finder.shared.open(url: url)
                             }
-                            Button("Import ...") {
+                            Button("Open...") {
                                 viewState.showImporter = true
                             }
                         }
@@ -48,7 +48,7 @@ struct GPXBrowser: View {
                     bufferManager.removeSelectedBuffers()
                 }
                 .contextMenu {
-                    Button("Import ...") {
+                    Button("Open...") {
                         viewState.showImporter = true
                     }
                 }
@@ -59,7 +59,7 @@ struct GPXBrowser: View {
         }
         .overlay {
             if viewState.isLoading {
-                ProgressOverlay(message: "Importing ...")
+                ProgressOverlay(message: "")
             }
         }
         .onAppear {
