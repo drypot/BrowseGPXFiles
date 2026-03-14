@@ -24,7 +24,7 @@ extension GPXMapViewController {
     }
 
     @IBAction func paste(_ sender: Any) {
-        bufferManager.paseteFromClipboard()
+        bufferManager.pasteFromClipboard()
         viewState.zoomToFit = true
     }
 

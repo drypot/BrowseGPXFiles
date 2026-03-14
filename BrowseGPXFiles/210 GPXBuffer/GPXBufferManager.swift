@@ -164,7 +164,7 @@ public class GPXBufferManager {
         Clipboard.shared.gpxCopies = gpxCopies
     }
 
-    func paseteFromClipboard() {
+    func pasteFromClipboard() {
         var buffers: [GPXBuffer] = []
         for gpx in Clipboard.shared.gpxCopies {
             let buffer = GPXBuffer(gpx: gpx)
