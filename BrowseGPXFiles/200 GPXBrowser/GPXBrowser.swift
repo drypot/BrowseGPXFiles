@@ -19,8 +19,6 @@ struct GPXBrowser: View {
     @State private var showImporter = false
     @State private var isLoading = false
 
-    @FocusState private var isFocused: Bool
-
     init(action: Action? = nil) {
         self.initialAction = action
     }
