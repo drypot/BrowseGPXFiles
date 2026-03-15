@@ -16,6 +16,7 @@ struct GPXBrowser: View {
     var initialAction: Action?
 
     @State private var bufferManager = GPXBufferManager()
+
     @State private var showImporter = false
     @State private var isLoading = false
 
@@ -41,6 +42,19 @@ struct GPXBrowser: View {
                                 showImporter = true
                             }
                         }
+                }
+                .onCutCommand {
+                    let providers = bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
+                    bufferManager.copyToClipboard()
+                    bufferManager.removeSelectedBuffers()
+                    return providers
+                }
+                .onCopyCommand {
+                    bufferManager.copyToClipboard()
+                    return bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
+                }
+                .onPasteCommand(of: [.text]) { _ in
+                    bufferManager.pasteFromClipboard()
                 }
                 .onDeleteCommand {
                     bufferManager.removeSelectedBuffers()
