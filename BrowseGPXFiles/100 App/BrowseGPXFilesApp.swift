@@ -17,8 +17,8 @@ struct BrowseGPXFilesApp: App {
     @State private var settings = SettingsData()
 
     var body: some Scene {
-        WindowGroup("Browse GPX Files", id: "browser") {
-            GPXBrowser()
+        WindowGroup("Browse GPX Files", id: "browser", for: Action.self) { $action in
+            GPXBrowser(action: action)
                 .toolbar(removing: .title)
                 .toolbarBackground(.hidden, for: .windowToolbar)
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
@@ -32,12 +32,16 @@ struct BrowseGPXFilesApp: App {
                 .keyboardShortcut("N", modifiers: [.command, .shift])
 
                 Button("Open...", systemImage: "arrow.up.right") {
-                    performAction?(.importFolders)
+                    if let performAction {
+                        performAction(.openFiles)
+                    } else {
+                        openWindow(id: "browser", value: Action.openFiles)
+                    }
                 }
                 .keyboardShortcut("o", modifiers: .command)
 
                 Button("Open Recent", systemImage: "clock") {
-                    performAction?(.importRecent)
+                    performAction?(.openRecent)
                 }
                 .keyboardShortcut("o", modifiers: [.command, .shift])
             }

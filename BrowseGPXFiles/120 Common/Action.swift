@@ -8,9 +8,8 @@
 import Foundation
 import SwiftUI
 
-enum Action {
-    case none
-    case importFolders, importRecent
+enum Action: Codable {
+    case openFiles, openRecent
     case zoomIn, zoomOut, zoomToFit
 }
 

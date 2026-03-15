@@ -20,15 +20,21 @@ struct GPXBrowser: View {
         var zoomToFit = false
     }
 
+    var initialAction: Action?
+
     @State private var bufferManager = GPXBufferManager()
     @State private var viewState = ViewState()
 
     @FocusState private var isFocused: Bool
 
+    init(action: Action? = nil) {
+        self.initialAction = action
+    }
+
     var body: some View {
         NavigationSplitView {
             if bufferManager.sortedBuffers.isEmpty {
-                Button("Import ...") {
+                Button("Open...") {
                     viewState.showImporter = true
                 }
             } else {
@@ -80,13 +86,18 @@ struct GPXBrowser: View {
         .dropDestination(for: URL.self) { urls, session in
             importFiles(urls)
         }
+        .task {
+            if let initialAction {
+                performAction(initialAction)
+            }
+        }
     }
 
     func performAction(_ action: Action) {
         switch action {
-        case .importFolders:
+        case .openFiles:
             viewState.showImporter = true
-        case .importRecent:
+        case .openRecent:
             importRecent()
         case .zoomToFit:
             viewState.zoomToFit = true
