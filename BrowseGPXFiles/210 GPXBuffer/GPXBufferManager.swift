@@ -156,6 +156,11 @@ public class GPXBufferManager {
 
     // MARK: - Clipboard
 
+    func cutToClipboard() {
+        copyToClipboard()
+        removeSelectedBuffers()
+    }
+
     func copyToClipboard() {
         var gpxCopies: [GPX] = []
         for buffer in selectedBuffers {

@@ -19,6 +19,10 @@ extension GPXMapViewController {
         undoManager?.redo()
     }
 
+    @IBAction func cut(_ sender: Any) {
+        bufferManager.cutToClipboard()
+    }
+
     @IBAction func copy(_ sender: Any) {
         bufferManager.copyToClipboard()
     }
