@@ -27,10 +27,6 @@ final class GPXMapViewController: NSViewController {
 
     override var acceptsFirstResponder: Bool { true }
 
-    //    override var undoManager: UndoManager? {
-    //        return document?.undoManager
-    //    }
-
     init(_ bufferManager: GPXBufferManager, _ viewState: GPXBrowser.ViewState) {
         self.bufferManager = bufferManager
         self.viewState = viewState
@@ -63,15 +59,11 @@ final class GPXMapViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
 
-//        mapView.frame = view.bounds
-
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.delegate = self
         view.addSubview(mapView)
 
         NSLayoutConstraint.activate([
-//            mapView.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            mapView.heightAnchor.constraint(equalTo: view.heightAnchor),
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -94,7 +86,7 @@ final class GPXMapViewController: NSViewController {
         }
         if !zoomRect.isNull {
             Task {
-                let edgePadding = NSEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+                let edgePadding = NSEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                 mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
             }
         }
