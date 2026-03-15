@@ -275,5 +275,25 @@ public class GPXBufferManager {
             selectBuffer(buffer)
         }
     }
+
+    // MARK: - Zoom
+
+    func zoomToFitAllBuffers() {
+        guard let mapView else { return }
+        var zoomRect = MKMapRect.null
+
+        for buffer in _allBuffers {
+            for polyline in buffer.polylines {
+                zoomRect = zoomRect.union(polyline.boundingMapRect)
+            }
+        }
+        if !zoomRect.isNull {
+            Task {
+                let padding: CGFloat = 5
+                let edgePadding = NSEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+                mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
+            }
+        }
+    }
 }
 

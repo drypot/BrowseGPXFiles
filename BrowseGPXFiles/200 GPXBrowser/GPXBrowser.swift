@@ -13,17 +13,11 @@ struct GPXBrowser: View {
     @Environment(\.undoManager) var undoManager
     @Environment(SettingsData.self) var settings
 
-    @Observable
-    class ViewState {
-        var showImporter = false
-        var isLoading = false
-        var zoomToFit = false
-    }
-
     var initialAction: Action?
 
     @State private var bufferManager = GPXBufferManager()
-    @State private var viewState = ViewState()
+    @State private var showImporter = false
+    @State private var isLoading = false
 
     @FocusState private var isFocused: Bool
 
@@ -35,7 +29,7 @@ struct GPXBrowser: View {
         NavigationSplitView {
             if bufferManager.sortedBuffers.isEmpty {
                 Button("Open...") {
-                    viewState.showImporter = true
+                    showImporter = true
                 }
             } else {
                 List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
@@ -46,7 +40,7 @@ struct GPXBrowser: View {
                                 Finder.shared.open(url: url)
                             }
                             Button("Open...") {
-                                viewState.showImporter = true
+                                showImporter = true
                             }
                         }
                 }
@@ -55,16 +49,16 @@ struct GPXBrowser: View {
                 }
                 .contextMenu {
                     Button("Open...") {
-                        viewState.showImporter = true
+                        showImporter = true
                     }
                 }
             }
         } detail: {
-            GPXMapView(bufferManager: bufferManager, viewState: viewState)
+            GPXMapView(bufferManager: bufferManager)
                 .ignoresSafeArea()
         }
         .overlay {
-            if viewState.isLoading {
+            if isLoading {
                 ProgressOverlay(message: "")
             }
         }
@@ -72,8 +66,8 @@ struct GPXBrowser: View {
             bufferManager.undoManager = undoManager
         }
         .focusedSceneValue(\.performAction, performAction)
-        .fileImporter(isPresented: $viewState.showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
-            viewState.showImporter = false
+        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
+            showImporter = false
             if case .success(let urls) = result {
                 saveBookmark(urls)
                 importFiles(urls)
@@ -96,11 +90,11 @@ struct GPXBrowser: View {
     func performAction(_ action: Action) {
         switch action {
         case .openFiles:
-            viewState.showImporter = true
+            showImporter = true
         case .openRecent:
             importRecent()
         case .zoomToFit:
-            viewState.zoomToFit = true
+            bufferManager.zoomToFitAllBuffers()
         default:
             break
         }
@@ -120,14 +114,13 @@ struct GPXBrowser: View {
     }
 
     func importFiles(_ urls: [URL]) {
-        guard viewState.isLoading == false else { return }
-        viewState.isLoading = true
+        guard isLoading == false else { return }
+        isLoading = true
 
         Task {
             let start = DispatchTime.now()
 
             do {
-                //try await bufferManager.importFiles(urls)
                 try await bufferManager.importFilesParallel(urls)
             } catch {
                 print("failed to import GPX files: \(error.localizedDescription)")
@@ -138,8 +131,8 @@ struct GPXBrowser: View {
             let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
             print("import: \(timeInterval) seconds")
 
-            self.viewState.isLoading = false
-            self.viewState.zoomToFit = true
+            self.isLoading = false
+            bufferManager.zoomToFitAllBuffers()
         }
     }
 

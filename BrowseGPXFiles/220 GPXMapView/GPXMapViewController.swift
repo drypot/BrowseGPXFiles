@@ -23,13 +23,11 @@ final class GPXMapViewController: NSViewController {
     var contextPoint: NSPoint?
 
     let bufferManager: GPXBufferManager
-    let viewState: GPXBrowser.ViewState
 
     override var acceptsFirstResponder: Bool { true }
 
-    init(_ bufferManager: GPXBufferManager, _ viewState: GPXBrowser.ViewState) {
+    init(_ bufferManager: GPXBufferManager) {
         self.bufferManager = bufferManager
-        self.viewState = viewState
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -77,19 +75,6 @@ final class GPXMapViewController: NSViewController {
         view.layer?.addSublayer(selectionLayer)
 
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요
-    }
-
-    func zoomToFitAllOverlays() {
-        var zoomRect = MKMapRect.null
-        mapView.overlays.forEach { overlay in
-            zoomRect = zoomRect.union(overlay.boundingMapRect)
-        }
-        if !zoomRect.isNull {
-            Task {
-                let edgePadding = NSEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-                mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
-            }
-        }
     }
 }
 

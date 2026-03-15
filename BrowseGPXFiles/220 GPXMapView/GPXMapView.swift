@@ -11,25 +11,18 @@ import MyLibrary
 
 struct GPXMapView: NSViewControllerRepresentable {
     var bufferManager: GPXBufferManager
-    var viewState: GPXBrowser.ViewState
 
     func makeNSViewController(context: Context) -> GPXMapViewController {
-        let controller = GPXMapViewController(bufferManager, viewState)
+        let controller = GPXMapViewController(bufferManager)
         bufferManager.mapView = controller.mapView
         return controller
     }
 
     func updateNSViewController(_ controller: GPXMapViewController, context: Context) {
-//        let _ = bufferManager.allBuffers.count
-//        let _ = bufferManager.selectedBuffers.count
-        if viewState.zoomToFit {
-            Task { viewState.zoomToFit = false }
-            controller.zoomToFitAllOverlays()
-        }
     }
 }
 
 #Preview {
     let bufferManager = GPXBufferManager()
-    GPXMapView(bufferManager: bufferManager, viewState: .init())
+    GPXMapView(bufferManager: bufferManager)
 }
