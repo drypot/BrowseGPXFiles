@@ -64,10 +64,10 @@ struct BrowseGPXFilesApp: App {
         }
         
         Window("About", id: "about") {
-            VStack(spacing: 20) {
-                // Image(nsImage: NSApp.applicationIconImage)
-                //    .resizable()
-                //    .frame(width: 64, height: 64)
+            VStack(spacing: 30) {
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .frame(width: 128, height: 128)
                 VStack(spacing: 8) {
                     Text("Browse GPX Files")
                         .font(.headline)
@@ -80,7 +80,7 @@ struct BrowseGPXFilesApp: App {
                     .font(.caption)
             }
             .padding(30)
-            .frame(width: 300, height: 250)
+            .frame(width: 320, height: 360)
             .containerBackground(.thickMaterial, for: .window)
             .windowMinimizeBehavior(.disabled)
         }
