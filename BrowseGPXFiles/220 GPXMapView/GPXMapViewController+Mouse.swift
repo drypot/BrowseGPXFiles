@@ -11,13 +11,11 @@ import MyLibrary
 
 extension GPXMapViewController {
 
-    override func flagsChanged(with event: NSEvent) {
+    override func mouseDown(with event: NSEvent) {
+        self.view.window?.makeFirstResponder(self) // 키 입력에 필요
+        
         isSelectionMode = event.modifierFlags.contains(.command)
         mapView.isScrollEnabled = !isSelectionMode
-    }
-
-    override func mouseDown(with event: NSEvent) {
-        self.view.window?.makeFirstResponder(self)
 
         startPoint = view.convert(event.locationInWindow, from: nil)
         isDragging = false
@@ -74,6 +72,9 @@ extension GPXMapViewController {
         isDragging = false
         selectionLayer.isHidden = true
         selectionLayer.path = nil
+
+        isSelectionMode = false
+        mapView.isScrollEnabled = !isSelectionMode
     }
 
     func handleClick(at point: NSPoint) {

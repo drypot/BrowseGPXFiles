@@ -45,8 +45,7 @@ struct GPXBrowser: View {
                 }
                 .onCutCommand {
                     let providers = bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
-                    bufferManager.copyToClipboard()
-                    bufferManager.removeSelectedBuffers()
+                    bufferManager.cutToClipboard()
                     return providers
                 }
                 .onCopyCommand {
@@ -74,9 +73,6 @@ struct GPXBrowser: View {
                 ProgressOverlay(message: "")
             }
         }
-        .onAppear {
-            bufferManager.undoManager = undoManager
-        }
         .focusedSceneValue(\.performAction, performAction)
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
             showImporter = false
@@ -93,6 +89,7 @@ struct GPXBrowser: View {
             importFiles(urls)
         }
         .task {
+            bufferManager.undoManager = undoManager
             if let initialAction {
                 performAction(initialAction)
             }
@@ -106,7 +103,7 @@ struct GPXBrowser: View {
         case .openRecent:
             importRecent()
         case .zoomToFit:
-            bufferManager.zoomToFitAllBuffers()
+            bufferManager.zoom()
         default:
             break
         }
@@ -144,7 +141,7 @@ struct GPXBrowser: View {
             print("import: \(timeInterval) seconds")
 
             self.isLoading = false
-            bufferManager.zoomToFitAllBuffers()
+            bufferManager.zoomToAllBuffers()
         }
     }
 

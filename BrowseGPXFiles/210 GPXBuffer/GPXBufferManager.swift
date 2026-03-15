@@ -198,20 +198,10 @@ public class GPXBufferManager {
 
     public func selectAllBuffers() {
         selectedBuffers = _allBuffers
-//        for buffer in _allBuffers {
-//            if !buffer.isSelected {
-//                selectBuffer(buffer)
-//            }
-//        }
     }
 
     public func deselectAllBuffers() {
         selectedBuffers = []
-//        for buffer in _allBuffers {
-//            if buffer.isSelected {
-//                deselectBuffer(buffer)
-//            }
-//        }
     }
 
     public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
@@ -283,7 +273,15 @@ public class GPXBufferManager {
 
     // MARK: - Zoom
 
-    func zoomToFitAllBuffers() {
+    func zoom() {
+        if _selectedBuffers.isEmpty {
+            zoomToAllBuffers()
+        } else {
+            zoomToSelected()
+        }
+    }
+
+    func zoomToAllBuffers() {
         guard let mapView else { return }
         var zoomRect = MKMapRect.null
 
@@ -294,7 +292,25 @@ public class GPXBufferManager {
         }
         if !zoomRect.isNull {
             Task {
-                let padding: CGFloat = 5
+                let padding: CGFloat = 10
+                let edgePadding = NSEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+                mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
+            }
+        }
+    }
+
+    func zoomToSelected() {
+        guard let mapView else { return }
+        var zoomRect = MKMapRect.null
+
+        for buffer in _selectedBuffers {
+            for polyline in buffer.polylines {
+                zoomRect = zoomRect.union(polyline.boundingMapRect)
+            }
+        }
+        if !zoomRect.isNull {
+            Task {
+                let padding: CGFloat = 10
                 let edgePadding = NSEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
                 mapView.setVisibleMapRect(zoomRect, edgePadding: edgePadding, animated: true)
             }
