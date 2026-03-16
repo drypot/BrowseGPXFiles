@@ -64,9 +64,8 @@ struct BrowseGPXFilesApp: App {
         }
         
         Window("About", id: "about") {
-            let release = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-"
-            let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "-"
-            let version = release + "." + build
+            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-"
+            // let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "-"
             VStack(spacing: 32) {
                 Image(nsImage: NSApp.applicationIconImage)
                     .resizable()
