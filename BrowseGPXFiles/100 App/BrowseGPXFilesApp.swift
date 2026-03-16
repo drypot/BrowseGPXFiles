@@ -64,6 +64,9 @@ struct BrowseGPXFilesApp: App {
         }
         
         Window("About", id: "about") {
+            let release = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-"
+            let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "-"
+            let version = release + "." + build
             VStack(spacing: 32) {
                 Image(nsImage: NSApp.applicationIconImage)
                     .resizable()
@@ -71,7 +74,7 @@ struct BrowseGPXFilesApp: App {
                 VStack(spacing: 4) {
                     Text("Browse GPX Files")
                         .font(.headline)
-                    Text("Version 0.0.1")
+                    Text("Version " + version)
                 }
                 VStack(spacing: 4) {
                     Text("Source code")
@@ -99,9 +102,10 @@ struct BrowseGPXFilesApp: App {
             }
         }
 
-        Settings {
-            SettingsView()
-                .environment(settings)
-        }
+//        Settings {
+//            SettingsView()
+//                .environment(settings)
+//        }
     }
+
 }
