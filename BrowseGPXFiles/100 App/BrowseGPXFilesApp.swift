@@ -64,23 +64,27 @@ struct BrowseGPXFilesApp: App {
         }
         
         Window("About", id: "about") {
-            VStack(spacing: 30) {
+            VStack(spacing: 32) {
                 Image(nsImage: NSApp.applicationIconImage)
                     .resizable()
                     .frame(width: 128, height: 128)
-                VStack(spacing: 8) {
+                VStack(spacing: 4) {
                     Text("Browse GPX Files")
                         .font(.headline)
                     Text("Version 0.0.1")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
                 }
-                Divider()
+                VStack(spacing: 4) {
+                    Text("Source code")
+                    Link("https://github.com/drypot/BrowseGPXFiles", destination: URL(string: "https://github.com/drypot/BrowseGPXFiles")!)
+                }
+                VStack(spacing: 4) {
+                    Text("Email")
+                    Link("drypot@gmail.com", destination: URL(string: "mailto:drypot@gmail.com")!)
+                }
                 Text("© 2026 Kyuhyun Park")
-                    .font(.caption)
             }
-            .padding(30)
-            .frame(width: 320, height: 360)
+            .padding(EdgeInsets(top: 48, leading: 24, bottom: 48, trailing: 24))
+            .frame(width: 320)
             .containerBackground(.thickMaterial, for: .window)
             .windowMinimizeBehavior(.disabled)
         }
