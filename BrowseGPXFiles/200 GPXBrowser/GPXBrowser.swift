@@ -18,7 +18,9 @@ struct GPXBrowser: View {
     @State private var bufferManager = GPXBufferManager()
 
     @State private var showImporter = false
-    @State private var isLoading = false
+    @State private var loading = 0
+
+    @State private var isTargeted = false
 
     init(action: Action? = nil) {
         self.initialAction = action
@@ -69,7 +71,7 @@ struct GPXBrowser: View {
                 .ignoresSafeArea()
         }
         .overlay {
-            if isLoading {
+            if loading > 0 {
                 ProgressOverlay(message: "")
             }
         }
@@ -78,15 +80,26 @@ struct GPXBrowser: View {
             showImporter = false
             if case .success(let urls) = result {
                 saveBookmark(urls)
-                importFiles(urls)
+                Task {
+                    await openFiles(urls)
+                }
             }
         }
         .onOpenURL { url in
             saveBookmark([url])
-            importFiles([url])
+            Task {
+                await openFiles([url])
+            }
         }
-        .dropDestination(for: URL.self) { urls, session in
-            importFiles(urls)
+//        macOS 26 부터
+//        .dropDestination(for: URL.self) { urls, session in
+//            openFiles(urls)
+//        }
+        .onDrop(of: [.fileURL], isTargeted: $isTargeted) { providers in
+            Task {
+                await openFiles(from: providers)
+            }
+            return true
         }
         .task {
             bufferManager.undoManager = undoManager
@@ -101,7 +114,9 @@ struct GPXBrowser: View {
         case .openFiles:
             showImporter = true
         case .openRecent:
-            importRecent()
+            Task {
+                await openRecent()
+            }
         case .zoomToFit:
             bufferManager.zoom()
         default:
@@ -122,33 +137,45 @@ struct GPXBrowser: View {
         return BookmarkManager.shared.load(forKey: "lastOpenFolder")
     }
 
-    func importFiles(_ urls: [URL]) {
-        guard isLoading == false else { return }
-        isLoading = true
+    func openFiles(_ urls: [URL]) async {
+        loading += 1
 
-        Task {
-            let start = DispatchTime.now()
+        let start = DispatchTime.now()
 
-            do {
-                try await bufferManager.importFilesParallel(urls)
-            } catch {
-                print("failed to import GPX files: \(error.localizedDescription)")
-            }
+        do {
+            try await bufferManager.openFilesParallel(urls)
+        } catch {
+            print("failed to import GPX files: \(error.localizedDescription)")
+        }
 
-            let end = DispatchTime.now()
-            let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-            let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
-            print("import: \(timeInterval) seconds")
+        let end = DispatchTime.now()
+        let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
+        print("import: \(timeInterval) seconds")
 
-            self.isLoading = false
-            bufferManager.zoomToAllBuffers()
+        self.loading -= 1
+        bufferManager.zoomToAllBuffers()
+    }
+
+    func openRecent() async {
+        if let url = loadBookmark() {
+            await openFiles([url])
         }
     }
 
-    func importRecent() {
-        if let url = loadBookmark() {
-            importFiles([url])
+    func openFiles(from providers: [NSItemProvider]) async {
+        var urls: [URL] = []
+        for provider in providers {
+            let url = await withCheckedContinuation { continuation in
+                _ = provider.loadObject(ofClass: URL.self) { (url, _) in
+                    continuation.resume(returning: url)
+                }
+            }
+            if let url {
+                urls.append(url)
+            }
         }
+        await openFiles(urls)
     }
 }
 

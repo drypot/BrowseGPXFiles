@@ -114,7 +114,7 @@ public class GPXBufferManager {
     // MARK: - File I/O
 
     @concurrent
-    public func importFiles(_ urls: [URL]) async throws {
+    public func openFiles(_ urls: [URL]) async throws {
         var buffers: [GPXBuffer] = []
         for url in urls {
             let accessing = url.startAccessingSecurityScopedResource()
@@ -128,7 +128,7 @@ public class GPXBufferManager {
     }
 
     @concurrent
-    public func importFilesParallel(_ urls: [URL]) async throws {
+    public func openFilesParallel(_ urls: [URL]) async throws {
         nonisolated struct Box: @unchecked Sendable {
             let buffer: GPXBuffer
         }
