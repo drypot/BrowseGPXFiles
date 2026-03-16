@@ -17,7 +17,7 @@ struct BrowseGPXFilesApp: App {
     @State private var settings = SettingsData()
 
     var body: some Scene {
-        WindowGroup("Browse GPX Files", id: "browser", for: Action.self) { $action in
+        WindowGroup("Browser", id: "browser", for: Action.self) { $action in
             GPXBrowser(action: action)
                 .toolbar(removing: .title)
                 .toolbarBackground(.hidden, for: .windowToolbar)
