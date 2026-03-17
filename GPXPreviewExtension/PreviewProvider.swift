@@ -10,7 +10,6 @@ import Quartz
 
 class PreviewProvider: QLPreviewProvider, QLPreviewingController {
     
-
     /*
      Use a QLPreviewProvider to provide data-based previews.
      
