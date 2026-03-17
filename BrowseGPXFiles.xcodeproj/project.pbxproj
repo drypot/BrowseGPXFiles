@@ -8,10 +8,39 @@
 
 /* Begin PBXBuildFile section */
 		001A01872F5271DF004009B6 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 001A01862F5271DF004009B6 /* MyLibrary */; };
+		00DEAED92F6962B00032AEA2 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00DEAED82F6962B00032AEA2 /* Quartz.framework */; };
+		00DEAEE52F6962B00032AEA2 /* GPXPreviewExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 00DEAED72F6962B00032AEA2 /* GPXPreviewExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00DEAEEC2F69649C0032AEA2 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 00DEAEEB2F69649C0032AEA2 /* MyLibrary */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		00DEAEE32F6962B00032AEA2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00FA26E82F51EB4000AB1CC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00DEAED62F6962B00032AEA2;
+			remoteInfo = GPXPreviewExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		00DEAEEA2F6962B00032AEA2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				00DEAEE52F6962B00032AEA2 /* GPXPreviewExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		001A01852F5271C4004009B6 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyLibrary; sourceTree = "<group>"; };
+		00DEAED72F6962B00032AEA2 /* GPXPreviewExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GPXPreviewExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		00DEAED82F6962B00032AEA2 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		00FA26F02F51EB4000AB1CC6 /* BrowseGPXFiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrowseGPXFiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -23,9 +52,24 @@
 			);
 			target = 00FA26EF2F51EB4000AB1CC6 /* BrowseGPXFiles */;
 		};
+		00DEAEE92F6962B00032AEA2 /* Exceptions for "GPXPreviewExtension" folder in "GPXPreviewExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 00DEAED62F6962B00032AEA2 /* GPXPreviewExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		00DEAEDA2F6962B00032AEA2 /* GPXPreviewExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				00DEAEE92F6962B00032AEA2 /* Exceptions for "GPXPreviewExtension" folder in "GPXPreviewExtension" target */,
+			);
+			path = GPXPreviewExtension;
+			sourceTree = "<group>";
+		};
 		00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -37,6 +81,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		00DEAED42F6962B00032AEA2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00DEAEEC2F69649C0032AEA2 /* MyLibrary in Frameworks */,
+				00DEAED92F6962B00032AEA2 /* Quartz.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26ED2F51EB4000AB1CC6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */,
+				00DEAEDA2F6962B00032AEA2 /* GPXPreviewExtension */,
 				001A01852F5271C4004009B6 /* MyLibrary */,
 				00FA26F12F51EB4000AB1CC6 /* Products */,
 				00FA27032F51F53900AB1CC6 /* Frameworks */,
@@ -62,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				00FA26F02F51EB4000AB1CC6 /* BrowseGPXFiles.app */,
+				00DEAED72F6962B00032AEA2 /* GPXPreviewExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,6 +124,7 @@
 		00FA27032F51F53900AB1CC6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				00DEAED82F6962B00032AEA2 /* Quartz.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -76,6 +132,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		00DEAED62F6962B00032AEA2 /* GPXPreviewExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00DEAEE62F6962B00032AEA2 /* Build configuration list for PBXNativeTarget "GPXPreviewExtension" */;
+			buildPhases = (
+				00DEAED32F6962B00032AEA2 /* Sources */,
+				00DEAED42F6962B00032AEA2 /* Frameworks */,
+				00DEAED52F6962B00032AEA2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				00DEAEDA2F6962B00032AEA2 /* GPXPreviewExtension */,
+			);
+			name = GPXPreviewExtension;
+			packageProductDependencies = (
+				00DEAEEB2F69649C0032AEA2 /* MyLibrary */,
+			);
+			productName = GPXPreviewExtension;
+			productReference = 00DEAED72F6962B00032AEA2 /* GPXPreviewExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		00FA26EF2F51EB4000AB1CC6 /* BrowseGPXFiles */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00FA26FB2F51EB4100AB1CC6 /* Build configuration list for PBXNativeTarget "BrowseGPXFiles" */;
@@ -83,10 +162,12 @@
 				00FA26EC2F51EB4000AB1CC6 /* Sources */,
 				00FA26ED2F51EB4000AB1CC6 /* Frameworks */,
 				00FA26EE2F51EB4000AB1CC6 /* Resources */,
+				00DEAEEA2F6962B00032AEA2 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				00DEAEE42F6962B00032AEA2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */,
@@ -109,6 +190,9 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					00DEAED62F6962B00032AEA2 = {
+						CreatedOnToolsVersion = 26.3;
+					};
 					00FA26EF2F51EB4000AB1CC6 = {
 						CreatedOnToolsVersion = 26.3;
 					};
@@ -129,11 +213,19 @@
 			projectRoot = "";
 			targets = (
 				00FA26EF2F51EB4000AB1CC6 /* BrowseGPXFiles */,
+				00DEAED62F6962B00032AEA2 /* GPXPreviewExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		00DEAED52F6962B00032AEA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26EE2F51EB4000AB1CC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -144,6 +236,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		00DEAED32F6962B00032AEA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26EC2F51EB4000AB1CC6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -153,7 +252,97 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		00DEAEE42F6962B00032AEA2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00DEAED62F6962B00032AEA2 /* GPXPreviewExtension */;
+			targetProxy = 00DEAEE32F6962B00032AEA2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		00DEAEE72F6962B00032AEA2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XFTC3W2MNQ;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GPXPreviewExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GPXPreviewExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFiles.GPXPreviewExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		00DEAEE82F6962B00032AEA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XFTC3W2MNQ;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GPXPreviewExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GPXPreviewExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFiles.GPXPreviewExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		00FA26F92F51EB4100AB1CC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -371,6 +560,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00DEAEE62F6962B00032AEA2 /* Build configuration list for PBXNativeTarget "GPXPreviewExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00DEAEE72F6962B00032AEA2 /* Debug */,
+				00DEAEE82F6962B00032AEA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		00FA26EB2F51EB4000AB1CC6 /* Build configuration list for PBXProject "BrowseGPXFiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -393,6 +591,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		001A01862F5271DF004009B6 /* MyLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MyLibrary;
+		};
+		00DEAEEB2F69649C0032AEA2 /* MyLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MyLibrary;
 		};
