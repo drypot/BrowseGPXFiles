@@ -24,6 +24,7 @@ struct BrowseGPXFilesApp: App {
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
                 .environment(settings)
         }
+        .handlesExternalEvents(matching: ["*"])
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button("New Window", systemImage: "macwindow") {
