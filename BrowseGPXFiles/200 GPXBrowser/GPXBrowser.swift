@@ -40,9 +40,6 @@ struct GPXBrowser: View {
                                 guard let url = buffer.url else { return }
                                 Finder.shared.open(url: url)
                             }
-                            Button("Open...") {
-                                showImporter = true
-                            }
                         }
                 }
                 .onCutCommand {

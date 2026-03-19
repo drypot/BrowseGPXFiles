@@ -22,16 +22,12 @@ struct BrowseGPXFilesApp: App {
                 .toolbar(removing: .title)
                 .toolbarBackground(.hidden, for: .windowToolbar)
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+                .windowToolbarFullScreenVisibility(.onHover)
                 .environment(settings)
         }
         .handlesExternalEvents(matching: ["*"])
         .commands {
-            CommandGroup(replacing: .newItem) {
-                Button("New Window", systemImage: "macwindow") {
-                    openWindow(id: "browser")
-                }
-                .keyboardShortcut("N", modifiers: [.command, .shift])
-
+            CommandGroup(after: .newItem) {
                 Button("Open...", systemImage: "arrow.up.right") {
                     if let performAction {
                         performAction(.openFiles)
