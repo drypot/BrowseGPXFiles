@@ -13,7 +13,7 @@ struct GPXParserTests {
 
     typealias XMLError = BasicXMLParser.XMLError
 
-    nonisolated(unsafe) static let gpx: GPX = {
+    static let gpx: GPX = {
         let url = Bundle.module.resourceURL!.appending(path: "GPXTest/manual.gpx")
         return try! GPXParser().parse(contentOf: url)
     }()

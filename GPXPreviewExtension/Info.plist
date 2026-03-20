@@ -9,9 +9,9 @@
 			<key>QLIsDataBasedPreview</key>
 			<false/>
 			<key>QLSupportedContentTypes</key>
-            <array>
-                <string>com.topografix.gpx</string>
-            </array>
+			<array>
+				<string>com.topografix.gpx</string>
+			</array>
 			<key>QLSupportsSearchableItems</key>
 			<false/>
 		</dict>

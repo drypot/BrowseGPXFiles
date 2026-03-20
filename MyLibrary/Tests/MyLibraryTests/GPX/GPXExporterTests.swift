@@ -11,7 +11,7 @@ import Testing
 
 struct GPXExporterTests {
 
-    nonisolated(unsafe) static let gpx: GPX = {
+    static let gpx: GPX = {
         let url = Bundle.module.resourceURL!.appending(path: "GPXTest/manual-multiple.gpx")
         return try! GPXParser().parse(contentOf: url)
     }()
