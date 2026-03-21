@@ -13,14 +13,14 @@ struct GPXBrowser: View {
     @Environment(\.undoManager) var undoManager
     @Environment(SettingsData.self) var settings
 
-    var initialAction: Action?
-
     @State private var bufferManager = GPXBufferManager()
 
     @State private var showImporter = false
     @State private var loading = 0
 
     @State private var isTargeted = false
+
+    var initialAction: Action?
 
     init(action: Action? = nil) {
         self.initialAction = action

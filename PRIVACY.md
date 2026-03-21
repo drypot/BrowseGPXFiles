@@ -14,7 +14,7 @@ The App does not collect, store, or transmit any personally identifiable informa
 The App does not provide user data to third parties, nor does it entrust the processing of personal information to external companies.
 
 ### 4. Data Security
-All data is managed safely within the macOS **App Sandbox** environment. Any temporary data used by the App is automatically deleted when no longer needed or when the App is removed.
+All data is managed safely within the macOS **App Sandbox** environment.
 
 ### 5. Contact Information
 If you have any questions or concerns regarding this Privacy Policy, please contact:

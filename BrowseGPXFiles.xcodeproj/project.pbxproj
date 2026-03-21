@@ -39,6 +39,9 @@
 
 /* Begin PBXFileReference section */
 		001A01852F5271C4004009B6 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyLibrary; sourceTree = "<group>"; };
+		00A47E6A2F6EB0EB000A7673 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		00A47E6B2F6EB0EB000A7673 /* PRIVACY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PRIVACY.md; sourceTree = "<group>"; };
+		00A47E6C2F6EB0EB000A7673 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		00DEAED72F6962B00032AEA2 /* GPXPreviewExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GPXPreviewExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DEAED82F6962B00032AEA2 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		00FA26F02F51EB4000AB1CC6 /* BrowseGPXFiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrowseGPXFiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +107,9 @@
 		00FA26E72F51EB4000AB1CC6 = {
 			isa = PBXGroup;
 			children = (
+				00A47E6A2F6EB0EB000A7673 /* LICENSE */,
+				00A47E6B2F6EB0EB000A7673 /* PRIVACY.md */,
+				00A47E6C2F6EB0EB000A7673 /* README.md */,
 				00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */,
 				00DEAEDA2F6962B00032AEA2 /* GPXPreviewExtension */,
 				001A01852F5271C4004009B6 /* MyLibrary */,

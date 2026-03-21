@@ -68,7 +68,7 @@ struct BrowseGPXFilesApp: App {
                     .resizable()
                     .frame(width: 128, height: 128)
                 VStack(spacing: 4) {
-                    Text("Browse GPX Files")
+                    Text("BrowseGPXFiles")
                         .font(.headline)
                     Text("Version " + version)
                 }
