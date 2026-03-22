@@ -132,12 +132,11 @@ public class GPXBufferManager {
     public func openFiles(_ urls: [URL]) async throws {
         var buffers: [GPXBuffer] = []
         for url in urls {
-            if url.startAccessingSecurityScopedResource() {
-                defer { url.stopAccessingSecurityScopedResource() }
-                for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                    let buffer = try GPXBuffer(contentOf: url)
-                    buffers.append(buffer)
-                }
+            let securityScoped = url.startAccessingSecurityScopedResource()
+            defer { if securityScoped { url.stopAccessingSecurityScopedResource() } }
+            for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                let buffer = try GPXBuffer(contentOf: url)
+                buffers.append(buffer)
             }
         }
         await self.addBuffers(buffers)
@@ -149,20 +148,20 @@ public class GPXBufferManager {
             let buffer: GPXBuffer
         }
         try await withThrowingTaskGroup(of: Box.self) { group in
-            var accessing: [URL] = []
+            var securityScoped: [URL] = []
             defer {
-                for url in accessing {
+                for url in securityScoped {
                     url.stopAccessingSecurityScopedResource()
                 }
             }
             for url in urls {
                 if url.startAccessingSecurityScopedResource() {
-                    accessing.append(url)
-                    for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                        group.addTask(priority: .userInitiated) {
-                            let buffer = try GPXBuffer(contentOf: url)
-                            return Box(buffer: buffer)
-                        }
+                    securityScoped.append(url)
+                }
+                for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                    group.addTask(priority: .userInitiated) {
+                        let buffer = try GPXBuffer(contentOf: url)
+                        return Box(buffer: buffer)
                     }
                 }
             }
