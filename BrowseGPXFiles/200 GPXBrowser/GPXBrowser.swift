@@ -73,7 +73,6 @@ struct GPXBrowser: View {
             }
         }
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
-            showImporter = false
             if case .success(let urls) = result {
                 saveBookmark(urls)
                 Task {
@@ -123,10 +122,6 @@ struct GPXBrowser: View {
 
     func saveBookmark(_ urls: [URL]) {
         guard let url = urls.first else { return }
-        let accessing = url.startAccessingSecurityScopedResource()
-        defer {
-            if accessing { url.stopAccessingSecurityScopedResource() }
-        }
         BookmarkManager.shared.save(url, forKey: "lastOpenFolder")
     }
 

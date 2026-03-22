@@ -117,11 +117,12 @@ public class GPXBufferManager {
     public func openFiles(_ urls: [URL]) async throws {
         var buffers: [GPXBuffer] = []
         for url in urls {
-            let accessing = url.startAccessingSecurityScopedResource()
-            defer { if accessing { url.stopAccessingSecurityScopedResource() } }
-            for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                let buffer = try GPXBuffer(contentOf: url)
-                buffers.append(buffer)
+            if url.startAccessingSecurityScopedResource() {
+                defer { url.stopAccessingSecurityScopedResource() }
+                for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                    let buffer = try GPXBuffer(contentOf: url)
+                    buffers.append(buffer)
+                }
             }
         }
         await self.addBuffers(buffers)
@@ -134,12 +135,19 @@ public class GPXBufferManager {
         }
         try await withThrowingTaskGroup(of: Box.self) { group in
             var accessing: [URL] = []
+            defer {
+                for url in accessing {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
             for url in urls {
-                if url.startAccessingSecurityScopedResource() { accessing.append(url) }
-                for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                    group.addTask(priority: .userInitiated) {
-                        let buffer = try GPXBuffer(contentOf: url)
-                        return Box(buffer: buffer)
+                if url.startAccessingSecurityScopedResource() {
+                    accessing.append(url)
+                    for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                        group.addTask(priority: .userInitiated) {
+                            let buffer = try GPXBuffer(contentOf: url)
+                            return Box(buffer: buffer)
+                        }
                     }
                 }
             }
@@ -148,9 +156,6 @@ public class GPXBufferManager {
                 buffers.append(box.buffer)
             }
             await self.addBuffers(buffers)
-            for url in accessing {
-                url.stopAccessingSecurityScopedResource()
-            }
         }
     }
 
