@@ -1,6 +1,6 @@
 //
 //  BookmarkManager.swift
-//  BrowseGPXFiles
+//  MyLibrary
 //
 //  Created by Kyuhyun Park on 2/26/26.
 //

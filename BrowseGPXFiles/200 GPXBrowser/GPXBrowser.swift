@@ -72,7 +72,6 @@ struct GPXBrowser: View {
                 ProgressOverlay(message: "")
             }
         }
-        .focusedSceneValue(\.performAction, performAction)
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
             showImporter = false
             if case .success(let urls) = result {
@@ -104,6 +103,7 @@ struct GPXBrowser: View {
                 performAction(initialAction)
             }
         }
+        .focusedSceneValue(\.performAction, performAction)
     }
 
     func performAction(_ action: Action) {
