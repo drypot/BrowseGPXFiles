@@ -28,44 +28,48 @@ struct GPXBrowser: View {
 
     var body: some View {
         NavigationSplitView {
-            if bufferManager.sortedBuffers.isEmpty {
-                Button("Open...") {
-                    showImporter = true
-                }
-            } else {
-                List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
-                    Text(buffer.name)
-                        .contextMenu {
-                            Button("Show in Finder") {
-                                guard let url = buffer.url else { return }
-                                Finder.shared.open(url: url)
-                            }
+            List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
+                Text(buffer.name)
+                    .contextMenu {
+                        Button("Show in Finder") {
+                            guard let url = buffer.url else { return }
+                            Finder.shared.open(url: url)
                         }
-                }
-                .onCutCommand {
-                    let providers = bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
-                    bufferManager.cutToClipboard()
-                    return providers
-                }
-                .onCopyCommand {
-                    bufferManager.copyToClipboard()
-                    return bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
-                }
-                .onPasteCommand(of: [.text]) { _ in
-                    bufferManager.pasteFromClipboard()
-                }
-                .onDeleteCommand {
-                    bufferManager.removeSelectedBuffers()
-                }
-                .contextMenu {
-                    Button("Open...") {
-                        showImporter = true
                     }
-                }
+            }
+            .searchable(text: $bufferManager.searchText, placement: .sidebar)
+            .onCutCommand {
+                let providers = bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
+                bufferManager.cutToClipboard()
+                return providers
+            }
+            .onCopyCommand {
+                bufferManager.copyToClipboard()
+                return bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
+            }
+            .onPasteCommand(of: [.text]) { _ in
+                bufferManager.pasteFromClipboard()
+            }
+            .onDeleteCommand {
+                bufferManager.removeSelectedBuffers()
             }
         } detail: {
-            GPXMapView(bufferManager: bufferManager)
-                .ignoresSafeArea()
+            VStack {
+                GPXMapView(bufferManager: bufferManager)
+                    .ignoresSafeArea()
+            }
+            // 이 것을 NavigationSplitView 에 붙여 놓으면 Sidebar 가 사라질 때 느려지거나 크래쉬가 난다.
+            .focusedSceneValue(\.performAction, performAction)
+
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showImporter = true
+                } label: {
+                    Label("Open", systemImage: "plus")
+                }
+            }
         }
         .overlay {
             if loading > 0 {
@@ -102,7 +106,6 @@ struct GPXBrowser: View {
                 performAction(initialAction)
             }
         }
-        .focusedSceneValue(\.performAction, performAction)
     }
 
     func performAction(_ action: Action) {

@@ -12,7 +12,12 @@ import MyLibrary
 
 @MainActor @Observable
 public class GPXBufferManager {
-    private var _allBuffers: Set<GPXBuffer> = []
+    private var _allBuffers: Set<GPXBuffer> = [] {
+        didSet {
+            _sortedBuffersShouldBeUpdated = true
+        }
+    }
+
     private var _polylineDic: [MKPolyline: GPXBuffer] = [:]
 
     private var _sortedBuffers: [GPXBuffer] = []
@@ -25,9 +30,21 @@ public class GPXBufferManager {
         return _allBuffers
     }
 
+    public var searchText = "" {
+        didSet {
+            _sortedBuffersShouldBeUpdated = true
+        }
+    }
+
     public var sortedBuffers: [GPXBuffer] {
         if _sortedBuffersShouldBeUpdated {
-            _sortedBuffers = Array(_allBuffers).sorted { $0.name < $1.name }
+            let buffers = if searchText.isEmpty {
+                _allBuffers
+            } else {
+                _allBuffers.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            }
+
+            _sortedBuffers = Array(buffers).sorted { $0.name < $1.name }
             _sortedBuffersShouldBeUpdated = false
         }
         return _sortedBuffers
@@ -76,7 +93,6 @@ public class GPXBufferManager {
                 mapView.addOverlays(buffer.polylines)
             }
         }
-        _sortedBuffersShouldBeUpdated = true
     }
 
     private func removeBuffers(_ buffers: [GPXBuffer]) {
@@ -94,7 +110,6 @@ public class GPXBufferManager {
                 mapView.removeOverlays(buffer.polylines)
             }
         }
-        _sortedBuffersShouldBeUpdated = true
     }
 
     public func removeSelectedBuffers() {
