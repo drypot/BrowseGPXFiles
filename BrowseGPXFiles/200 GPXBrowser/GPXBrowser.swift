@@ -53,6 +53,7 @@ struct GPXBrowser: View {
             .onDeleteCommand {
                 bufferManager.removeSelectedBuffers()
             }
+            .navigationSplitViewColumnWidth(min: 180, ideal: 260, max: 520)
         } detail: {
             VStack {
                 GPXMapView(bufferManager: bufferManager)
