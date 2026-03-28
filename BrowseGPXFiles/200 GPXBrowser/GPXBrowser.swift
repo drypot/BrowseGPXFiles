@@ -18,7 +18,7 @@ struct GPXBrowser: View {
     @State private var showImporter = false
     @State private var loading = 0
 
-    @State private var isTargeted = false
+//    @State private var isTargeted = false
 
     var initialAction: Action?
 
@@ -91,15 +91,22 @@ struct GPXBrowser: View {
             }
         }
 //        macOS 26 부터
-//        .dropDestination(for: URL.self) { urls, session in
-//            openFiles(urls)
-//        }
-        .onDrop(of: [.fileURL], isTargeted: $isTargeted) { providers in
+        .dropDestination(for: URL.self) { urls, session in
             Task {
-                await openFiles(from: providers)
+                await openFiles(urls)
             }
-            return true
         }
+
+//        macOS 15 지원하려고 넣었던 코드인데, 그냥 macOS 26 부터하기로 하자.
+//        코딩 실험용 프로젝트인데 걍 최신 버전 따라다니는 것으로;
+//
+//        .onDrop(of: [.fileURL], isTargeted: $isTargeted) { providers in
+//            Task {
+//                await openFiles(from: providers)
+//            }
+//            return true
+//        }
+
         .task {
             bufferManager.undoManager = undoManager
             if let initialAction {
