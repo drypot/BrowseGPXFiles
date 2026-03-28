@@ -13,6 +13,8 @@ import MyLibrary
 // QuickLook 에선 네트웍을 쓰지 못하게 막혔다고 한다.
 // 해서 MapView 배경 지도가 표시되지 않는다;
 
+// 코드는 남겨놓고 프로젝트 빌드에서 제외해야겠다.
+
 class PreviewViewController: NSViewController, QLPreviewingController {
 
     let mapView = MKMapView()
