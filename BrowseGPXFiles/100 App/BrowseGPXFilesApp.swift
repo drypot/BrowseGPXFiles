@@ -117,5 +117,4 @@ struct BrowseGPXFilesApp: App {
 //                .environment(settings)
 //        }
     }
-
 }
