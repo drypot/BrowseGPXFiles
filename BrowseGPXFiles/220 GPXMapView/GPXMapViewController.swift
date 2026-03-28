@@ -11,7 +11,8 @@ import MyLibrary
 
 final class GPXMapViewController: NSViewController {
 
-    let locationManager = CLLocationManager()
+//    let locationManager = CLLocationManager()
+
     let mapView = MKMapView()
 
     var startPoint: NSPoint?
@@ -44,10 +45,13 @@ final class GPXMapViewController: NSViewController {
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        addMapView()
+
+//        앱 실행시 지도를 사용자 위치 중심으로 Zoom 해서 표시하려고 넣은 코드인데 불필요한 권한을 요청하는 것 같다. 안 쓰는 것으로;
+//        locationManager.delegate = self
+//        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.startUpdatingLocation()
     }
 
     override func viewDidLoad() {
@@ -56,7 +60,9 @@ final class GPXMapViewController: NSViewController {
 
     override func viewDidAppear() {
         super.viewDidAppear()
+    }
 
+    func addMapView() {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.delegate = self
         view.addSubview(mapView)
