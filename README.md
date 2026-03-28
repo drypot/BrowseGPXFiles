@@ -1,4 +1,4 @@
-# BrowseGPXFiles
+# Browse GPX Files
 
 Swift 공부하면서 연습용으로 만들어 보는 GPX App.
 

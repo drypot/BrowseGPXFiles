@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00FA26EF2F51EB4000AB1CC6"
-               BuildableName = "BrowseGPXFiles.app"
-               BlueprintName = "BrowseGPXFiles"
+               BuildableName = "Browse GPX Files.app"
+               BlueprintName = "Browse GPX Files"
                ReferencedContainer = "container:BrowseGPXFiles.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00FA26EF2F51EB4000AB1CC6"
-            BuildableName = "BrowseGPXFiles.app"
-            BlueprintName = "BrowseGPXFiles"
+            BuildableName = "Browse GPX Files.app"
+            BlueprintName = "Browse GPX Files"
             ReferencedContainer = "container:BrowseGPXFiles.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00FA26EF2F51EB4000AB1CC6"
-            BuildableName = "BrowseGPXFiles.app"
-            BlueprintName = "BrowseGPXFiles"
+            BuildableName = "Browse GPX Files.app"
+            BlueprintName = "Browse GPX Files"
             ReferencedContainer = "container:BrowseGPXFiles.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

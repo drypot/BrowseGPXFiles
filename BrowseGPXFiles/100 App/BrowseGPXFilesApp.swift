@@ -82,7 +82,7 @@ struct BrowseGPXFilesApp: App {
                     .resizable()
                     .frame(width: 128, height: 128)
                 VStack(spacing: 4) {
-                    Text("BrowseGPXFiles")
+                    Text("Browse GPX Files")
                         .font(.headline)
                     Text("Version " + version)
                 }
@@ -106,7 +106,7 @@ struct BrowseGPXFilesApp: App {
         .restorationBehavior(.disabled)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("About BrowseGPXFiles", systemImage: "info.circle") {
+                Button("About Browse GPX Files", systemImage: "info.circle") {
                     openWindow(id: "about")
                 }
             }
