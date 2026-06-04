@@ -9,7 +9,7 @@ Swift 공부하면서 연습용으로 만들어 보는 GPX App.
 
 ## Mac App Store
 
-https://apps.apple.com/us/app/browse-gpx-files/id6760876897
+https://apps.apple.com/app/browse-gpx-files/id6760876897
 
 ## Contact Information
 
