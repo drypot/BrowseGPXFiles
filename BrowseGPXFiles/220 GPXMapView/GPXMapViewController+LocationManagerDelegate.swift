@@ -7,7 +7,6 @@
 
 import Cocoa
 import MapKit
-import MyLibrary
 
 //extension GPXMapViewController: CLLocationManagerDelegate {
 //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

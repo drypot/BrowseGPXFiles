@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MyLibrary
 
 class Clipboard {
     public static let shared = Clipboard()

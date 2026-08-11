@@ -7,7 +7,6 @@
 
 import Cocoa
 import MapKit
-import MyLibrary
 
 final class GPXMapViewController: NSViewController {
 

@@ -6,12 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		001A01872F5271DF004009B6 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 001A01862F5271DF004009B6 /* MyLibrary */; };
-/* End PBXBuildFile section */
+/* Begin PBXContainerItemProxy section */
+		008EEF43302B40CC00529C01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00FA26E82F51EB4000AB1CC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00FA26EF2F51EB4000AB1CC6;
+			remoteInfo = "Browse GPX Files";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		001A01852F5271C4004009B6 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyLibrary; sourceTree = "<group>"; };
+		008EEF3F302B40CC00529C01 /* Browse GPX Files Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Browse GPX Files Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A47E6A2F6EB0EB000A7673 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		00A47E6B2F6EB0EB000A7673 /* PRIVACY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PRIVACY.md; sourceTree = "<group>"; };
 		00A47E6C2F6EB0EB000A7673 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -29,6 +35,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		008EEF40302B40CC00529C01 /* BrowseGPXFilesTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BrowseGPXFilesTests;
+			sourceTree = "<group>";
+		};
 		00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -40,11 +51,17 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		008EEF3C302B40CC00529C01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26ED2F51EB4000AB1CC6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				001A01872F5271DF004009B6 /* MyLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,7 +75,7 @@
 				00A47E6B2F6EB0EB000A7673 /* PRIVACY.md */,
 				00A47E6C2F6EB0EB000A7673 /* README.md */,
 				00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */,
-				001A01852F5271C4004009B6 /* MyLibrary */,
+				008EEF40302B40CC00529C01 /* BrowseGPXFilesTests */,
 				00FA26F12F51EB4000AB1CC6 /* Products */,
 				00FA27032F51F53900AB1CC6 /* Frameworks */,
 			);
@@ -68,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				00FA26F02F51EB4000AB1CC6 /* Browse GPX Files.app */,
+				008EEF3F302B40CC00529C01 /* Browse GPX Files Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +100,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		008EEF3E302B40CC00529C01 /* Browse GPX Files Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 008EEF47302B40CC00529C01 /* Build configuration list for PBXNativeTarget "Browse GPX Files Tests" */;
+			buildPhases = (
+				008EEF3B302B40CC00529C01 /* Sources */,
+				008EEF3C302B40CC00529C01 /* Frameworks */,
+				008EEF3D302B40CC00529C01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				008EEF44302B40CC00529C01 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				008EEF40302B40CC00529C01 /* BrowseGPXFilesTests */,
+			);
+			name = "Browse GPX Files Tests";
+			packageProductDependencies = (
+			);
+			productName = BrowseGPXFilesTests;
+			productReference = 008EEF3F302B40CC00529C01 /* Browse GPX Files Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		00FA26EF2F51EB4000AB1CC6 /* Browse GPX Files */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00FA26FB2F51EB4100AB1CC6 /* Build configuration list for PBXNativeTarget "Browse GPX Files" */;
@@ -99,7 +140,6 @@
 			);
 			name = "Browse GPX Files";
 			packageProductDependencies = (
-				001A01862F5271DF004009B6 /* MyLibrary */,
 			);
 			productName = BrowseGPXFiles;
 			productReference = 00FA26F02F51EB4000AB1CC6 /* Browse GPX Files.app */;
@@ -112,9 +152,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
+					008EEF3E302B40CC00529C01 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 00FA26EF2F51EB4000AB1CC6;
+					};
 					00FA26EF2F51EB4000AB1CC6 = {
 						CreatedOnToolsVersion = 26.3;
 					};
@@ -135,11 +179,19 @@
 			projectRoot = "";
 			targets = (
 				00FA26EF2F51EB4000AB1CC6 /* Browse GPX Files */,
+				008EEF3E302B40CC00529C01 /* Browse GPX Files Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		008EEF3D302B40CC00529C01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26EE2F51EB4000AB1CC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -150,6 +202,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		008EEF3B302B40CC00529C01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		00FA26EC2F51EB4000AB1CC6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -159,7 +218,57 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		008EEF44302B40CC00529C01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00FA26EF2F51EB4000AB1CC6 /* Browse GPX Files */;
+			targetProxy = 008EEF43302B40CC00529C01 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		008EEF45302B40CC00529C01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XFTC3W2MNQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFilesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Browse GPX Files.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Browse GPX Files";
+			};
+			name = Debug;
+		};
+		008EEF46302B40CC00529C01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XFTC3W2MNQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFilesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Browse GPX Files.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Browse GPX Files";
+			};
+			name = Release;
+		};
 		00FA26F92F51EB4100AB1CC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -326,6 +435,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFiles;
+				PRODUCT_MODULE_NAME = BrowseGPXFiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -378,6 +488,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.drypot.BrowseGPXFiles;
+				PRODUCT_MODULE_NAME = BrowseGPXFiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -393,6 +504,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		008EEF47302B40CC00529C01 /* Build configuration list for PBXNativeTarget "Browse GPX Files Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				008EEF45302B40CC00529C01 /* Debug */,
+				008EEF46302B40CC00529C01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		00FA26EB2F51EB4000AB1CC6 /* Build configuration list for PBXProject "BrowseGPXFiles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -412,13 +532,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		001A01862F5271DF004009B6 /* MyLibrary */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MyLibrary;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00FA26E82F51EB4000AB1CC6 /* Project object */;
 }

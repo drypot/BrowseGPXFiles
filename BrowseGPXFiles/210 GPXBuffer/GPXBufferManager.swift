@@ -8,7 +8,6 @@
 import Foundation
 import UniformTypeIdentifiers
 import MapKit
-import MyLibrary
 
 @MainActor @Observable
 public class GPXBufferManager {

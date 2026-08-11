@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
-import MyLibrary
 
 struct GPXBrowser: View {
     @Environment(\.undoManager) var undoManager

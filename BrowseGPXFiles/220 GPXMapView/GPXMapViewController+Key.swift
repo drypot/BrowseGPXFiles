@@ -7,7 +7,6 @@
 
 import Cocoa
 import MapKit
-import MyLibrary
 
 extension GPXMapViewController {
     override func keyDown(with event: NSEvent) {

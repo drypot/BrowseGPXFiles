@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MapKit
-import MyLibrary
 
 struct GPXMapView: NSViewControllerRepresentable {
     var bufferManager: GPXBufferManager
