@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		005A8DE1302D829A000CF8B3 /* TestResources in Resources */ = {isa = PBXBuildFile; fileRef = 005A8DE0302D829A000CF8B3 /* TestResources */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		008EEF43302B40CC00529C01 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -17,6 +21,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		005A8DE0302D829A000CF8B3 /* TestResources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestResources; sourceTree = "<group>"; };
 		008EEF3F302B40CC00529C01 /* Browse GPX Files Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Browse GPX Files Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A47E6A2F6EB0EB000A7673 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		00A47E6B2F6EB0EB000A7673 /* PRIVACY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PRIVACY.md; sourceTree = "<group>"; };
@@ -76,6 +81,7 @@
 				00A47E6C2F6EB0EB000A7673 /* README.md */,
 				00FA26F22F51EB4000AB1CC6 /* BrowseGPXFiles */,
 				008EEF40302B40CC00529C01 /* BrowseGPXFilesTests */,
+				005A8DE0302D829A000CF8B3 /* TestResources */,
 				00FA26F12F51EB4000AB1CC6 /* Products */,
 				00FA27032F51F53900AB1CC6 /* Frameworks */,
 			);
@@ -189,6 +195,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				005A8DE1302D829A000CF8B3 /* TestResources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

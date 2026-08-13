@@ -11,7 +11,7 @@ import Testing
 
 struct FolderTests {
     func resourceURL(_ path: String = "") -> URL {
-        return TestBundle.bundle.resourceURL!
+        return TestBundle.resourceURL
             .appending(path: "DirectoryCrawlerTest")
             .appending(path: path)
     }

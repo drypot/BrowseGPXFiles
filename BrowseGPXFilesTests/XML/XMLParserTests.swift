@@ -12,7 +12,7 @@ import Testing
 struct XMLParserTests {
 
     static let plotaRouteShortData: Data = {
-        let url = TestBundle.bundle.resourceURL!.appending(path: "GPXTest/plotaroute-short.gpx")
+        let url = TestBundle.resourceURL.appending(path: "GPXTest/plotaroute-short.gpx")
         return try! Data(contentsOf: url)
     }()
 
@@ -128,7 +128,7 @@ struct XMLParserTests {
     }
     
     @Test func testXMLParserHandlingError() throws {
-        let url = TestBundle.bundle.resourceURL!.appending(path: "GPXTest/bad.gpx")
+        let url = TestBundle.resourceURL.appending(path: "GPXTest/bad.gpx")
         let data = try Data(contentsOf: url)
         let parser = XMLParser(data: data)
 
