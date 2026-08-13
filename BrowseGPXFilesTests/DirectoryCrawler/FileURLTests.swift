@@ -12,7 +12,7 @@ import Testing
 struct FileURLCollectorTests {
     func resourceURL(_ path: String = "") -> URL {
         return TestBundle.resourceURL
-            .appending(path: "DirectoryCrawlerTest")
+            .appending(path: "DirectoryCrawler")
             .appending(path: path)
     }
 

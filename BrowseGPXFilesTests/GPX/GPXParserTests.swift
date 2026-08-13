@@ -14,7 +14,7 @@ struct GPXParserTests {
     typealias XMLError = BasicXMLParser.XMLError
 
     static let gpx: GPX = {
-        let url = TestBundle.resourceURL.appending(path: "GPXTest/manual.gpx")
+        let url = TestBundle.resourceURL.appending(path: "GPX/manual.gpx")
         return try! GPXParser().parse(contentOf: url)
     }()
 
@@ -73,20 +73,20 @@ struct GPXParserTests {
 
     @Test func testNoContent() throws {
         #expect(throws: XMLError.parsingError(0)) {
-            let url = TestBundle.resourceURL.appending(path: "GPXTest/no-content.gpx")
+            let url = TestBundle.resourceURL.appending(path: "GPX/no-content.gpx")
             let _ = try GPXParser().parse(contentOf: url)
         }
     }
 
     @Test func testBadFormat() throws {
         #expect(throws: XMLError.parsingError(9)) {
-            let url = TestBundle.resourceURL.appending(path: "GPXTest/bad.gpx")
+            let url = TestBundle.resourceURL.appending(path: "GPX/bad.gpx")
             let _ = try GPXParser().parse(contentOf: url)
         }
     }
 
     @Test func testNoTrack() throws {
-        let url = TestBundle.resourceURL.appending(path: "GPXTest/no-track.gpx")
+        let url = TestBundle.resourceURL.appending(path: "GPX/no-track.gpx")
         let gpx = try GPXParser().parse(contentOf: url)
         #expect(gpx.creator == "texteditor")
         #expect(gpx.tracks.count == 0)
