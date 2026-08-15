@@ -1,5 +1,5 @@
 //
-//  GPXBrowser.swift
+//  BrowserNavigator.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 7/6/25.
@@ -8,9 +8,9 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct GPXBrowser: View {
+struct BrowserNavigator: View {
     @Environment(\.undoManager) var undoManager
-    @Environment(SettingsData.self) var settings
+    @Environment(AppState.self) var app
 
     @State private var bufferManager = GPXBufferManager()
 
@@ -19,11 +19,9 @@ struct GPXBrowser: View {
 
 //    @State private var isTargeted = false
 
-    var initialAction: Action?
-
-    init(action: Action? = nil) {
-        self.initialAction = action
-    }
+//    init(action: Action? = nil) {
+//        self.initialAction = action
+//    }
 
     var body: some View {
         NavigationSplitView {
@@ -57,7 +55,7 @@ struct GPXBrowser: View {
             GPXMapView(bufferManager: bufferManager)
                 .ignoresSafeArea()
                 // 이 것을 NavigationSplitView 에 붙여 놓으면 Sidebar 가 사라질 때 느려지거나 크래쉬가 난다.
-                .focusedSceneValue(\.performAction, performAction)
+                // .focusedSceneValue(\.performAction, performAction)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -106,26 +104,26 @@ struct GPXBrowser: View {
 
         .task {
             bufferManager.undoManager = undoManager
-            if let initialAction {
-                performAction(initialAction)
-            }
+//            if let initialAction {
+//                performAction(initialAction)
+//            }
         }
     }
 
-    func performAction(_ action: Action) {
-        switch action {
-        case .openFiles:
-            showImporter = true
-        case .openRecent:
-            Task {
-                await openRecent()
-            }
-        case .zoomToFit:
-            bufferManager.zoom()
-        default:
-            break
-        }
-    }
+//    func performAction(_ action: Action) {
+//        switch action {
+//        case .openFiles:
+//            showImporter = true
+//        case .openRecent:
+//            Task {
+//                await openRecent()
+//            }
+//        case .zoomToFit:
+//            bufferManager.zoom()
+//        default:
+//            break
+//        }
+//    }
 
     func saveBookmark(_ urls: [URL]) {
         guard let url = urls.first else { return }
@@ -179,8 +177,7 @@ struct GPXBrowser: View {
 }
 
 #Preview {
-    let settings = SettingsData()
-    GPXBrowser()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .environment(settings)
+//    BrowserNavigator()
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .environment(settings)
 }
