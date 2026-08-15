@@ -9,50 +9,19 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct BrowserNavigator: View {
-    @Environment(\.undoManager) var undoManager
     @Environment(AppState.self) var app
-
-    @State private var bufferManager = GPXBufferManager()
-
-    @State private var showImporter = false
-    @State private var loading = 0
-
-//    @State private var isTargeted = false
-
-//    init(action: Action? = nil) {
-//        self.initialAction = action
-//    }
+    @Environment(BrowserState.self) var browser
+    @Environment(GPXManager.self) var manager
+    @Environment(\.undoManager) var undoManager
 
     var body: some View {
+        @Bindable var browser = browser
         NavigationSplitView {
-            List(bufferManager.sortedBuffers, id: \.self, selection: $bufferManager.selectedBuffers) { buffer in
-                Text(buffer.name)
-                    .contextMenu {
-                        Button("Show in Finder") {
-                            guard let url = buffer.url else { return }
-                            Finder.shared.open(url: url)
-                        }
-                    }
-            }
-            .searchable(text: $bufferManager.searchText, placement: .sidebar)
-            .onCutCommand {
-                let providers = bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
-                bufferManager.cutToClipboard()
-                return providers
-            }
-            .onCopyCommand {
-                bufferManager.copyToClipboard()
-                return bufferManager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
-            }
-            .onPasteCommand(of: [.text]) { _ in
-                bufferManager.pasteFromClipboard()
-            }
-            .onDeleteCommand {
-                bufferManager.removeSelectedBuffers()
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 260, max: 520)
+            SidebarContainer()
+                .frame(minWidth: 200, maxHeight: .infinity)
+                //.navigationSplitViewColumnWidth(min: 180, ideal: 260, max: 520)
         } detail: {
-            GPXMapView(bufferManager: bufferManager)
+            GPXMapView(bufferManager: manager)
                 .ignoresSafeArea()
                 // 이 것을 NavigationSplitView 에 붙여 놓으면 Sidebar 가 사라질 때 느려지거나 크래쉬가 난다.
                 // .focusedSceneValue(\.performAction, performAction)
@@ -60,18 +29,18 @@ struct BrowserNavigator: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    showImporter = true
+                    browser.showImporter = true
                 } label: {
                     Label("Open", systemImage: "plus")
                 }
             }
         }
         .overlay {
-            if loading > 0 {
+            if browser.loading > 0 {
                 ProgressOverlay(message: "")
             }
         }
-        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
+        .fileImporter(isPresented: $browser.showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
             if case .success(let urls) = result {
                 saveBookmark(urls)
                 Task {
@@ -103,7 +72,7 @@ struct BrowserNavigator: View {
 //        }
 
         .task {
-            bufferManager.undoManager = undoManager
+            manager.undoManager = undoManager
 //            if let initialAction {
 //                performAction(initialAction)
 //            }
@@ -135,12 +104,12 @@ struct BrowserNavigator: View {
     }
 
     func openFiles(_ urls: [URL]) async {
-        loading += 1
+        browser.loading += 1
 
         let start = DispatchTime.now()
 
         do {
-            try await bufferManager.openFilesParallel(urls)
+            try await manager.openFilesParallel(urls)
         } catch {
             print("failed to import GPX files: \(error.localizedDescription)")
         }
@@ -150,8 +119,8 @@ struct BrowserNavigator: View {
         let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
         print("import: \(timeInterval) seconds")
 
-        self.loading -= 1
-        bufferManager.zoomToAllBuffers()
+        self.browser.loading -= 1
+        manager.zoomToAllBuffers()
     }
 
     func openRecent() async {

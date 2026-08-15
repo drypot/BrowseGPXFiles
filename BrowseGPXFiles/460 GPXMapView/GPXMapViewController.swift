@@ -22,11 +22,11 @@ final class GPXMapViewController: NSViewController {
 
     var contextPoint: NSPoint?
 
-    let bufferManager: GPXBufferManager
+    let bufferManager: GPXManager
 
     override var acceptsFirstResponder: Bool { true } // 키 입력에 필요
 
-    init(_ bufferManager: GPXBufferManager) {
+    init(_ bufferManager: GPXManager) {
         self.bufferManager = bufferManager
         super.init(nibName: nil, bundle: nil)
     }

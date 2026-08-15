@@ -23,6 +23,8 @@ struct BrowserContainer: View {
             .modifier(BrowserTask())
             .focusedSceneValue(browser)
             .environment(browser)
+            .environment(browser.context)
+            .environment(browser.manager)
     }
 
     func setupWindow(_ window: NSWindow?) {
