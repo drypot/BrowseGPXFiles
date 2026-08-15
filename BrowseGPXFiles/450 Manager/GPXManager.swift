@@ -8,9 +8,16 @@
 import Foundation
 import UniformTypeIdentifiers
 import MapKit
+import OSLog
 
 @Observable
 public class GPXManager {
+    @ObservationIgnored private var context: BrowserContext
+
+    init(context: BrowserContext) {
+        self.context = context
+    }
+    
     private var _allBuffers: Set<GPXState> = [] {
         didSet {
             _sortedBuffersShouldBeUpdated = true
@@ -73,8 +80,6 @@ public class GPXManager {
         }
     }
 
-    public init() {}
-
     // MARK: - Insert / Delete
 
     private func addBuffers(_ buffers: [GPXState]) {
@@ -127,22 +132,22 @@ public class GPXManager {
 
     // MARK: - File I/O
 
-    @concurrent
-    public func openFiles(_ urls: [URL]) async throws {
-        var buffers: [GPXState] = []
-        for url in urls {
-            let securityScoped = url.startAccessingSecurityScopedResource()
-            defer { if securityScoped { url.stopAccessingSecurityScopedResource() } }
-            for url in try GPXFileURLCollector().collectRecursively(from: url) {
-                let buffer = try GPXState(contentOf: url)
-                buffers.append(buffer)
-            }
-        }
-        await self.addBuffers(buffers)
-    }
+//    @concurrent
+//    private func importFiles(_ urls: [URL]) async throws {
+//        var buffers: [GPXState] = []
+//        for url in urls {
+//            let securityScoped = url.startAccessingSecurityScopedResource()
+//            defer { if securityScoped { url.stopAccessingSecurityScopedResource() } }
+//            for url in try GPXFileURLCollector().collectRecursively(from: url) {
+//                let buffer = try GPXState(contentOf: url)
+//                buffers.append(buffer)
+//            }
+//        }
+//        await self.addBuffers(buffers)
+//    }
 
     @concurrent
-    public func openFilesParallel(_ urls: [URL]) async throws {
+    private func importFilesParallel(from urls: [URL]) async throws {
         nonisolated struct Box: @unchecked Sendable {
             let buffer: GPXState
         }
@@ -170,6 +175,41 @@ public class GPXManager {
             }
             await self.addBuffers(buffers)
         }
+    }
+
+    func importFiles(from urls: [URL]) async {
+        context.loading += 1
+
+        let start = DispatchTime.now()
+
+        do {
+            try await importFilesParallel(from: urls)
+        } catch {
+            logger.error("failed to import GPX files: \(error.localizedDescription)")
+        }
+
+        let end = DispatchTime.now()
+        let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
+        logger.info("import: \(timeInterval) seconds")
+
+        context.loading -= 1
+        zoomToAllBuffers()
+    }
+
+    func importFiles(from providers: [NSItemProvider]) async {
+        var urls: [URL] = []
+        for provider in providers {
+            let url = await withCheckedContinuation { continuation in
+                _ = provider.loadObject(ofClass: URL.self) { (url, _) in
+                    continuation.resume(returning: url)
+                }
+            }
+            if let url {
+                urls.append(url)
+            }
+        }
+        await importFiles(from: urls)
     }
 
     // MARK: - Clipboard

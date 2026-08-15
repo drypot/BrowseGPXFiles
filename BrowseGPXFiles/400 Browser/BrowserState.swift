@@ -14,12 +14,9 @@ final class BrowserState {
     @ObservationIgnored var context: BrowserContext
     @ObservationIgnored var manager: GPXManager
 
-    var showImporter = false
-    var loading = 0
-
     init() {
         context = BrowserContext()
-        manager = GPXManager()
+        manager = GPXManager(context: context)
         logger.debug("init browser state:")
     }
 

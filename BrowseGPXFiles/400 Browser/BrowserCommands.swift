@@ -22,15 +22,39 @@ struct BrowserCommands: Commands {
             }
             .keyboardShortcut("n", modifiers: [.command, .control])
 
-            Button("Open...", systemImage: "arrow.up.right") {
+            Button("Open...", systemImage: "folder") {
                 app.openNewBrowserWindowFromDialog(openWindow: openWindow)
             }
             .keyboardShortcut("o")
 
-            // Button("Open Recent", systemImage: "clock") {
-            //     performAction?(.openRecent)
-            // }
-            // .keyboardShortcut("o", modifiers: [.command, .shift])
+            Menu("Open Recent", systemImage: "text.below.folder") {
+                let urls = app.recentDocumentURLs
+                if urls.isEmpty {
+                    Text("No Recent Documents")
+                } else {
+                    ForEach(urls, id: \.self) { url in
+                        Button(url.lastPathComponent) {
+                            app.openNewBrowserWindow(urls: [url], openWindow: openWindow)
+                        }
+                    }
+                    Divider()
+                    Button("Clear Menu") {
+                        app.clearRecentDocuments()
+                    }
+                }
+            }
+        }
+        CommandGroup(replacing: .importExport) {
+            Button("Import...", systemImage: "square.and.arrow.down") {
+                guard let browser else { return }
+                app.importFiles(browser: browser)
+            }
+            .keyboardShortcut("i")
+            Button("Import Recent", systemImage: "square.and.arrow.down.badge.clock") {
+                guard let browser else { return }
+                app.importRecent(browser: browser)
+            }
+            .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         CommandGroup(after: .toolbar) {
             // Button("Zoom In", systemImage: "plus.magnifyingglass") {

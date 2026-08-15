@@ -20,8 +20,3 @@ struct GPXMapRepresentable: NSViewControllerRepresentable {
     func updateNSViewController(_ controller: GPXMapController, context: Context) {
     }
 }
-
-#Preview {
-    let bufferManager = GPXManager()
-    GPXMapRepresentable(bufferManager: bufferManager)
-}

@@ -17,9 +17,9 @@ struct BrowserToolbar: ToolbarContent {
     var body: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
             Button {
-                browser.showImporter = true
+                app.importFiles(browser: browser)
             } label: {
-                Label("Open", systemImage: "plus")
+                Label("Import", systemImage: "plus")
             }
         }
     }
