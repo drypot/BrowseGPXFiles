@@ -16,10 +16,13 @@ struct BrowserContainer: View {
     var body: some View {
         BrowserNavigator()
             .background(WindowAccessor(onResolve: setupWindow))
-            .toolbar(removing: .title)
+            .windowToolbarFullScreenVisibility(.onHover)
             .toolbarBackground(.hidden, for: .windowToolbar)
             .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-            .windowToolbarFullScreenVisibility(.onHover)
+            .toolbar(removing: .title)
+            .toolbar {
+                BrowserToolbar()
+            }
             .modifier(BrowserTask())
             .focusedSceneValue(browser)
             .environment(browser)

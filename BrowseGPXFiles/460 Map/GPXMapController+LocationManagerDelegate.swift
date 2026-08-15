@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController+LocationManagerDelegate.swift
+//  GPXMapController+LocationManagerDelegate.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 5/16/25.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-//extension GPXMapViewController: CLLocationManagerDelegate {
+//extension GPXMapController: CLLocationManagerDelegate {
 //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 //        guard let location = locations.last else { return }
 //

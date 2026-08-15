@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController+Edit.swift
+//  GPXMapController+Edit.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 4/26/25.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-extension GPXMapViewController {
+extension GPXMapController {
 
     // NavigationSplitView -> List 에 Copy & Paste 코드 붙여놓는 것과 별도로
     // MapView 쪽에도 나름 같은 코드들 붙여놓는 것이 부작용이 덜했다.

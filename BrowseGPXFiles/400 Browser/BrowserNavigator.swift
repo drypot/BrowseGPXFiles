@@ -21,19 +21,7 @@ struct BrowserNavigator: View {
                 .frame(minWidth: 200, maxHeight: .infinity)
                 //.navigationSplitViewColumnWidth(min: 180, ideal: 260, max: 520)
         } detail: {
-            GPXMapView(bufferManager: manager)
-                .ignoresSafeArea()
-                // 이 것을 NavigationSplitView 에 붙여 놓으면 Sidebar 가 사라질 때 느려지거나 크래쉬가 난다.
-                // .focusedSceneValue(\.performAction, performAction)
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    browser.showImporter = true
-                } label: {
-                    Label("Open", systemImage: "plus")
-                }
-            }
+            GPXMapContainer()
         }
         .overlay {
             if browser.loading > 0 {

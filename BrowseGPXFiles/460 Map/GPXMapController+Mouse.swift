@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController+Mouse.swift
+//  GPXMapController+Mouse.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 4/26/25.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-extension GPXMapViewController {
+extension GPXMapController {
 
     override func mouseDown(with event: NSEvent) {
         self.view.window?.makeFirstResponder(self) // 키 입력에 필요

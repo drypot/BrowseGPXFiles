@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController+Menu.swift
+//  GPXMapController+Menu.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 3/13/26.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-extension GPXMapViewController {
+extension GPXMapController {
     override func rightMouseDown(with event: NSEvent) {
         contextPoint = mapView.convert(event.locationInWindow, from: nil)
 

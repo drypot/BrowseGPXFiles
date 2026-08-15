@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController+Key.swift
+//  GPXMapController+Key.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 4/26/25.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-extension GPXMapViewController {
+extension GPXMapController {
     override func keyDown(with event: NSEvent) {
 
         // specialKey 는 macOS 13, 2022 이상에서만 지원한다고 한다.

@@ -1,5 +1,5 @@
 //
-//  GPXMapViewController.swift
+//  GPXMapController.swift
 //  BrowseGPXFiles
 //
 //  Created by Kyuhyun Park on 8/20/24.
@@ -8,7 +8,7 @@
 import Cocoa
 import MapKit
 
-final class GPXMapViewController: NSViewController {
+final class GPXMapController: NSViewController {
 
 //    let locationManager = CLLocationManager()
 
@@ -83,7 +83,7 @@ final class GPXMapViewController: NSViewController {
     }
 }
 
-extension GPXMapViewController: MKMapViewDelegate {
+extension GPXMapController: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let polyline = overlay as? MKPolyline {
             if let buffer = bufferManager.buffer(from: polyline) {
