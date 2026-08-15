@@ -37,6 +37,6 @@ struct BrowserContainer: View {
     }
 }
 
-#Preview {
-    BrowserContainer()
-}
+//#Preview {
+//    BrowserContainer()
+//}
