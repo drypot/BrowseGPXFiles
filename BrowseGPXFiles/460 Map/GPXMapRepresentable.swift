@@ -9,11 +9,12 @@ import SwiftUI
 import MapKit
 
 struct GPXMapRepresentable: NSViewControllerRepresentable {
-    var bufferManager: GPXManager
+    @Environment(AppState.self) var app
+    @Environment(GPXManager.self) var manager
 
     func makeNSViewController(context: Context) -> GPXMapController {
-        let controller = GPXMapController(bufferManager)
-        bufferManager.mapView = controller.mapView
+        let controller = GPXMapController(app: app, manager: manager)
+        manager.mapView = controller.mapView
         return controller
     }
 

@@ -16,20 +16,12 @@ struct BrowserTask: ViewModifier {
     func body(content: Content) -> some View {
         content
             .task {
-                // SceneStorage 가 업데이트 될 때까지 한 사이클 쉰다.
+                // SceneStorage를 쓸 경우, SceneStorage 업데이트 될 때까지 한 사이클 쉰다.
                 await Task.yield()
                 initialize()
             }
 
         /*
-            .fileImporter(isPresented: $browser.showImporter, allowedContentTypes: [.folder, .gpx], allowsMultipleSelection: true) { result in
-                if case .success(let urls) = result {
-                    saveBookmark(urls)
-                    Task {
-                        await openFiles(urls)
-                    }
-                }
-            }
             .onOpenURL { url in
                 saveBookmark([url])
                 Task {

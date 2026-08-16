@@ -20,7 +20,7 @@ struct SidebarContainer: View {
                 .contextMenu {
                     Button("Show in Finder") {
                         guard let url = buffer.url else { return }
-                        Finder.shared.open(url: url)
+                        app.openFinder(with: url)
                     }
                 }
         }

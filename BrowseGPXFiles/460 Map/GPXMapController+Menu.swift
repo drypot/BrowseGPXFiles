@@ -21,7 +21,7 @@ extension GPXMapController {
         guard let point = contextPoint else { return }
         let (mapPoint, tolerance) = mapPoint(at: point)
         if let url = bufferManager.nearestBuffer(at: mapPoint, with: tolerance)?.url {
-            Finder.shared.open(url: url)
+            app.openFinder(with: url)
         }
     }
 }

@@ -99,4 +99,18 @@ class AppState {
         NSDocumentController.shared.clearRecentDocuments(nil)
         recentDocumentURLs = NSDocumentController.shared.recentDocumentURLs
     }
+
+    // MARK: - Finder
+
+    func openFinder(with url: URL?) {
+        guard let url else { return }
+        let path = url.path(percentEncoded: false)
+        if FileManager.default.fileExists(atPath: path) {
+            NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: "")
+        } else {
+            let folderURL = url.deletingLastPathComponent()
+            NSWorkspace.shared.open(folderURL)
+        }
+    }
+
 }
