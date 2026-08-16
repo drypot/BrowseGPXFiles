@@ -15,28 +15,13 @@ struct BrowserContainer: View {
 
     var body: some View {
         BrowserNavigator()
-            .background(WindowAccessor(onResolve: setupWindow))
-            .windowToolbarFullScreenVisibility(.onHover)
-            .toolbarBackground(.hidden, for: .windowToolbar)
-            .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-            .toolbar(removing: .title)
-            .toolbar {
-                BrowserToolbar()
-            }
-            .modifier(BrowserTask())
-            .focusedSceneValue(browser)
+            .modifier(BrowserToolbar())
+            //.modifier(BrowserSheet())
+            .modifier(BrowserWindowEvent())
+            .modifier(BrowserInit())
             .environment(browser)
             .environment(browser.context)
             .environment(browser.manager)
-    }
-
-    func setupWindow(_ window: NSWindow?) {
-        logger.debug("setup browser window:")
-        guard let window else { return }
-        self.browser.context.window = window
+            .focusedSceneValue(browser)
     }
 }
-
-//#Preview {
-//    BrowserContainer()
-//}

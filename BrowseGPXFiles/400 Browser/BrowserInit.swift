@@ -1,5 +1,5 @@
 //
-//  BrowserTask.swift
+//  BrowserInit.swift
 //  Browse GPX Files
 //
 //  Created by Kyuhyun Park on 8/14/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BrowserTask: ViewModifier {
+struct BrowserInit: ViewModifier {
     @Environment(AppState.self) var app
     @Environment(BrowserState.self) var browser
     @Environment(GPXManager.self) var manager
