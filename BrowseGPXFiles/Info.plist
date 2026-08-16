@@ -16,7 +16,7 @@
 				<string>com.topografix.gpx</string>
 			</array>
 			<key>NSDocumentClass</key>
-			<string>$(PRODUCT_MODULE_NAME).Document</string>
+			<string></string>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
