@@ -18,12 +18,12 @@ struct BrowserCommands: Commands {
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
             Button("New Window", systemImage: "macwindow") {
-                app.openNewBrowserWindow(openWindow: openWindow)
+                app.newBrowserWindow(openWindow: openWindow)
             }
             .keyboardShortcut("n", modifiers: [.command, .control])
 
             Button("Open...", systemImage: "folder") {
-                app.openNewBrowserWindowFromDialog(openWindow: openWindow)
+                app.newBrowserWindowFromDialog(openWindow: openWindow)
             }
             .keyboardShortcut("o")
 
@@ -34,7 +34,7 @@ struct BrowserCommands: Commands {
                 } else {
                     ForEach(urls, id: \.self) { url in
                         Button(url.lastPathComponent) {
-                            app.openNewBrowserWindow(urls: [url], openWindow: openWindow)
+                            app.newBrowserWindow(with: [url], openWindow: openWindow)
                         }
                     }
                     Divider()
@@ -47,12 +47,12 @@ struct BrowserCommands: Commands {
         CommandGroup(replacing: .importExport) {
             Button("Import...", systemImage: "square.and.arrow.down") {
                 guard let browser else { return }
-                app.importFiles(browser: browser)
+                app.importFromDialog(to: browser)
             }
             .keyboardShortcut("i")
             Button("Import Recent", systemImage: "square.and.arrow.down.badge.clock") {
                 guard let browser else { return }
-                app.importRecent(browser: browser)
+                app.importRecent(to: browser)
             }
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }

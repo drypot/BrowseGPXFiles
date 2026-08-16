@@ -197,21 +197,6 @@ public class GPXManager {
         zoomToAllBuffers()
     }
 
-    func importFiles(from providers: [NSItemProvider]) async {
-        var urls: [URL] = []
-        for provider in providers {
-            let url = await withCheckedContinuation { continuation in
-                _ = provider.loadObject(ofClass: URL.self) { (url, _) in
-                    continuation.resume(returning: url)
-                }
-            }
-            if let url {
-                urls.append(url)
-            }
-        }
-        await importFiles(from: urls)
-    }
-
     // MARK: - Clipboard
 
     func cutToClipboard() {

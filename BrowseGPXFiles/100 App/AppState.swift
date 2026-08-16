@@ -26,22 +26,18 @@ class AppState {
 
     // MARK: - Browser Window
 
-    func openNewBrowserWindow(urls: [URL]?, openWindow: OpenWindowAction) {
+    func newBrowserWindow(with urls: [URL]? = nil, openWindow: OpenWindowAction) {
         urlsForNewWindow = urls
         openWindow(id: "browser")
     }
 
-    func openNewBrowserWindow(openWindow: OpenWindowAction) {
-        openNewBrowserWindow(urls: nil, openWindow: openWindow)
-    }
-
-    func openNewBrowserWindowFromDialog(openWindow: OpenWindowAction) {
+    func newBrowserWindowFromDialog(openWindow: OpenWindowAction) {
         showOpenPanel { urls in
-            self.openNewBrowserWindow(urls: urls, openWindow: openWindow)
+            self.newBrowserWindow(with: urls, openWindow: openWindow)
         }
     }
 
-    func showOpenPanel(for window: NSWindow? = nil, onComplete: @escaping ([URL]) -> Void) {
+    private func showOpenPanel(for window: NSWindow? = nil, onComplete: @escaping ([URL]) -> Void) {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = true
@@ -67,7 +63,7 @@ class AppState {
         }
     }
 
-    func importFiles(browser: BrowserState) {
+    func importFromDialog(to browser: BrowserState) {
         guard let window = browser.context.window else { return }
         showOpenPanel(for: window) { urls in
             Task {
@@ -76,12 +72,39 @@ class AppState {
         }
     }
 
-    func importRecent(browser: BrowserState) {
+    func importRecent(to browser: BrowserState) {
         guard let url = recentDocumentURLs.first else { return }
         Task {
             await browser.manager.importFiles(from: [url])
         }
     }
+
+    func importDrop(from urls: [URL], to browser: BrowserState) {
+        self.addRecentDocumentURLs(urls)
+        Task {
+            await browser.manager.importFiles(from: urls)
+        }
+    }
+
+    /*
+    // macOS 26 이전 지원용 코드
+    func importFiles(from providers: [NSItemProvider], to browser: BrowserState) async {
+        var urls: [URL] = []
+        for provider in providers {
+            let url = await withCheckedContinuation { continuation in
+                _ = provider.loadObject(ofClass: URL.self) { (url, _) in
+                    continuation.resume(returning: url)
+                }
+            }
+            if let url {
+                urls.append(url)
+            }
+        }
+        Task {
+            await browser.manager.importFiles(from: urls)
+        }
+    }
+    */
 
     // MARK: - RecentDocuments
 
