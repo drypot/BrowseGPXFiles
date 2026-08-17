@@ -11,7 +11,7 @@ import Testing
 
 struct GPXExporterTests {
 
-    static let gpx: GPX = {
+    static let gpx: GPXFile = {
         let url = TestBundle.resourceURL.appending(path: "GPX/manual-multiple.gpx")
         return try! GPXParser().parse(contentOf: url)
     }()

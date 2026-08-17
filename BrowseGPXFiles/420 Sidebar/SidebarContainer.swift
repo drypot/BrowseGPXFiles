@@ -19,8 +19,8 @@ struct SidebarContainer: View {
             Text(buffer.name)
                 .contextMenu {
                     Button("Show in Finder") {
-                        guard let url = buffer.url else { return }
-                        app.openFinder(with: url)
+                        //guard let url = buffer.url else { return }
+                        app.openFinder(with: buffer.url)
                     }
                 }
         }

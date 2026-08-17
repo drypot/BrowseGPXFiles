@@ -16,18 +16,18 @@ public nonisolated struct GPXParser {
 
     public init() {}
     
-    public func parse(contentOf url: URL) throws -> GPX {
+    public func parse(contentOf url: URL) throws -> GPXFile {
         let data = try Data(contentsOf: url)
-        return try parse(data: data)
+        return try parse(url: url, data: data)
     }
 
-    public func parse(data: Data) throws -> GPX {
+    public func parse(url: URL, data: Data) throws -> GPXFile {
         let root = try BasicXMLParser().parse(data: data)
-        return parse(rootNode: root)
+        return parse(url: url, rootNode: root)
     }
     
-    private func parse(rootNode: XMLNode) -> GPX {
-        var gpx = GPX()
+    private func parse(url: URL, rootNode: XMLNode) -> GPXFile {
+        var gpx = GPXFile(url: url)
 
         gpx.creator = rootNode.attributes["creator"] ?? ""
         gpx.version = rootNode.attributes["version"] ?? ""

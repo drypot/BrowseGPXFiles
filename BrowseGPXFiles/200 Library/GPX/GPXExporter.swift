@@ -10,10 +10,10 @@ import Foundation
 // 참고 https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/GPXExporter.swift
 
 public nonisolated struct GPXExporter {
-    let gpx: GPX
+    let gpx: GPXFile
     let creator: String
 
-    public init(_ gpx: GPX, creator: String = "BrowseGPXFiles") {
+    public init(_ gpx: GPXFile, creator: String = "BrowseGPXFiles") {
         self.gpx = gpx
         self.creator = creator
     }

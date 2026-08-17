@@ -10,7 +10,7 @@ import Foundation
 class Clipboard {
     public static let shared = Clipboard()
 
-    public var gpxCopies: [GPX] = []
+    public var gpxCopies: [GPXFile] = []
 
     private init() {}
 }

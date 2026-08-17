@@ -13,7 +13,7 @@ struct GPXParserTests {
 
     typealias XMLError = BasicXMLParser.XMLError
 
-    static let gpx: GPX = {
+    static let gpx: GPXFile = {
         let url = TestBundle.resourceURL.appending(path: "GPX/manual.gpx")
         return try! GPXParser().parse(contentOf: url)
     }()

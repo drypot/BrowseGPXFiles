@@ -11,20 +11,21 @@ import MapKit
 
 @Observable
 nonisolated public final class GPXState: Identifiable, Hashable {
-    public private(set) var gpx: GPX
+    public var name: String { gpx.name }
+    public var url: URL { gpx.url }
+
+    public var id: URL { gpx.url }
+
+    public private(set) var gpx: GPXFile
     public private(set) var polylines: [MKPolyline]
     public var isSelected = false
     
-    public var id: ObjectIdentifier { ObjectIdentifier(self) }
-    public var name: String { gpx.name }
-    public var url: URL? { gpx.url }
-
-    public init(gpx: GPX, polylines: [MKPolyline]) {
+    public init(gpx: GPXFile, polylines: [MKPolyline]) {
         self.gpx = gpx
         self.polylines = polylines
     }
 
-    public convenience init(gpx: GPX) {
+    public convenience init(gpx: GPXFile) {
         var polylines: [MKPolyline] = []
         for track in gpx.tracks {
             for segment in track.segments {
@@ -36,11 +37,7 @@ nonisolated public final class GPXState: Identifiable, Hashable {
     }
 
     public convenience init(contentOf url: URL) throws {
-        // print("processing: \(url.path)")
-        let data = try Data(contentsOf: url)
-        var gpx = try GPXParser().parse(data: data)
-        gpx.url = url
-        gpx.name = url.lastPathComponent
+        let gpx = try GPXParser().parse(contentOf: url)
         self.init(gpx: gpx)
     }
 

@@ -10,7 +10,7 @@ import MapKit
 
 public nonisolated enum GPXUtility {
 
-    public static func makeData(from gpx: GPX) throws -> Data {
+    public static func makeData(from gpx: GPXFile) throws -> Data {
         let xmlString = GPXExporter(gpx).makeXMLString()
         return Data(xmlString.utf8)
     }

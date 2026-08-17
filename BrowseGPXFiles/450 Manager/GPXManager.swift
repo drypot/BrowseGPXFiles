@@ -205,7 +205,7 @@ public class GPXManager {
     }
 
     func copyToClipboard() {
-        var gpxCopies: [GPX] = []
+        var gpxCopies: [GPXFile] = []
         for buffer in selectedBuffers {
             gpxCopies.append(buffer.gpx)
         }

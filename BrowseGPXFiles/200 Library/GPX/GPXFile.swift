@@ -1,5 +1,5 @@
 //
-//  GPX.swift
+//  GPXFile.swift
 //  BrowseGPXFiles
 //
 //  Created by drypot on 2023-12-28.
@@ -10,20 +10,26 @@ import MapKit
 import CoreTransferable
 
 // 참고
+// https://www.topografix.com/gpx.asp
+// https://www.topografix.com/GPX/1/1/
 // https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/Coordinate.swift
 
-public nonisolated struct GPX: Codable, Sendable, Transferable {
-    public var url: URL?
-    public var name: String = ""
+public nonisolated struct GPXFile: Codable, Sendable, Transferable {
+    public var url: URL
+    public var name: String
 
     public var creator: String = ""
     public var version: String = ""
+
     public var metadata: GPXMetadata = .init()
     public var waypoints: [GPXWaypoint] = []
     //public var routes: [GPXRoute]
     public var tracks: [GPXTrack] = []
 
-    public init() {}
+    public init(url: URL) {
+        self.url = url
+        self.name = url.lastPathComponent
+    }
 
     public static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .gpxInternal)
