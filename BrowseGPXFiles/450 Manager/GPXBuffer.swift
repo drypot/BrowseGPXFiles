@@ -1,5 +1,5 @@
 //
-//  GPXState.swift
+//  GPXBuffer.swift
 //  MyLibrary
 //
 //  Created by Kyuhyun Park on 3/1/26.
@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import MapKit
 
 @Observable
-nonisolated public final class GPXState: Identifiable, Hashable {
+nonisolated public final class GPXBuffer: Identifiable, Hashable {
     public var name: String { gpx.name }
     public var url: URL { gpx.url }
 
@@ -43,7 +43,7 @@ nonisolated public final class GPXState: Identifiable, Hashable {
 
     // MARK: - Equatable, Hashable
 
-    public static func == (lhs: GPXState, rhs: GPXState) -> Bool {
+    public static func == (lhs: GPXBuffer, rhs: GPXBuffer) -> Bool {
         return lhs.id == rhs.id
     }
 
