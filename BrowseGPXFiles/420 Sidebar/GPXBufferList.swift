@@ -10,12 +10,11 @@ import UniformTypeIdentifiers
 
 struct GPXBufferList: View {
     @Environment(AppState.self) var app
-    //@Environment(BrowserState.self) var browser
     @Environment(GPXManager.self) var manager
 
     var body: some View {
         @Bindable var manager = manager
-        List(manager.sortedBuffers, selection: $manager.selectedBufferIDs) { buffer in
+        List(manager.filteredBuffers, selection: $manager.selectedBufferIDs) { buffer in
             Text(buffer.name)
         }
         .contextMenu(forSelectionType: GPXBuffer.ID.self ) { ids in
@@ -23,13 +22,13 @@ struct GPXBufferList: View {
         }
         .searchable(text: $manager.searchText, placement: .sidebar)
         .onCutCommand {
-            let providers = manager.findSelectedBuffers().map { NSItemProvider(object: $0.name as NSString) }
+            let providers = manager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
             manager.cutToClipboard()
             return providers
         }
         .onCopyCommand {
             manager.copyToClipboard()
-            return manager.findSelectedBuffers().map { NSItemProvider(object: $0.name as NSString) }
+            return manager.selectedBuffers.map { NSItemProvider(object: $0.name as NSString) }
         }
         .onPasteCommand(of: [.text]) { _ in
             manager.pasteFromClipboard()

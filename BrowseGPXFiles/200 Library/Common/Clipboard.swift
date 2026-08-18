@@ -8,9 +8,9 @@
 import Foundation
 
 class Clipboard {
-    public static let shared = Clipboard()
+    static let shared = Clipboard()
 
-    public var gpxCopies: [GPXFile] = []
+    var gpxCopies: [GPXFile] = []
 
     private init() {}
 }

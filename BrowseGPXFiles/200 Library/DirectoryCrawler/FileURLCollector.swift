@@ -7,10 +7,10 @@
 
 import Foundation
 
-public nonisolated struct FileURLCollector {
-    public init() {}
+nonisolated struct FileURLCollector {
+    init() {}
 
-    public func collectShallowly(from url: URL) throws -> [URL] {
+    func collectShallowly(from url: URL) throws -> [URL] {
         let fileManager = FileManager.default
         var results: [URL] = []
 
@@ -36,7 +36,7 @@ public nonisolated struct FileURLCollector {
         return results
     }
 
-    public func collectRecursively(from urls: [URL]) throws -> [URL] {
+    func collectRecursively(from urls: [URL]) throws -> [URL] {
         let fileManager = FileManager.default
         var results: [URL] = []
 
@@ -66,7 +66,7 @@ public nonisolated struct FileURLCollector {
         return results
     }
 
-    public func collectRecursively(from url: URL) throws -> [URL] {
+    func collectRecursively(from url: URL) throws -> [URL] {
         return try collectRecursively(from: [url])
     }
 }

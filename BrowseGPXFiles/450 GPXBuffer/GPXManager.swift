@@ -11,45 +11,44 @@ import MapKit
 import OSLog
 
 @Observable
-public class GPXManager {
-    @ObservationIgnored private var context: BrowserContext
-
-    public weak var mapView: MKMapView?
-    public weak var undoManager: UndoManager?
+class GPXManager {
+    // MARK: - All Buffers
 
     private(set) var allBuffers: [GPXBuffer.ID: GPXBuffer] = [:] {
         didSet {
-            _sortedBuffersShouldBeUpdated = true
+            _filteredBuffersShouldBeUpdated = true
         }
     }
 
-    private var _sortedBuffers: [GPXBuffer] = []
-    private var _sortedBuffersShouldBeUpdated = true
+    // MARK: - Filtered Buffers
 
-    public var sortedBuffers: [GPXBuffer] {
-        if _sortedBuffersShouldBeUpdated {
+    private var _filteredBuffers: [GPXBuffer] = []
+    private var _filteredBuffersShouldBeUpdated = true
+
+    var filteredBuffers: [GPXBuffer] {
+        if _filteredBuffersShouldBeUpdated {
             let buffers: [GPXBuffer]
             if searchText.isEmpty {
                 buffers = Array(allBuffers.values)
             } else {
                 buffers = allBuffers.values.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
             }
-            _sortedBuffers = buffers.sorted { $0.name < $1.name }
-            _sortedBuffersShouldBeUpdated = false
+            _filteredBuffers = buffers.sorted { $0.name < $1.name }
+            _filteredBuffersShouldBeUpdated = false
         }
-        return _sortedBuffers
+        return _filteredBuffers
     }
 
-    public var searchText = "" {
+    var searchText = "" {
         didSet {
-            _sortedBuffersShouldBeUpdated = true
+            _filteredBuffersShouldBeUpdated = true
         }
     }
 
-    private var polylineDic: [MKPolyline: GPXBuffer] = [:]
+    // MARK: - Selected Buffers
 
     // SwiftUI List 뷰가 이 값을 직접 조작하는 경우를 고려해야 한다.
-    public var selectedBufferIDs: Set<GPXBuffer.ID> = [] {
+    var selectedBufferIDs: Set<GPXBuffer.ID> = [] {
         didSet {
             let inserted = selectedBufferIDs.subtracting(oldValue)
             let removed = oldValue.subtracting(selectedBufferIDs)
@@ -75,6 +74,25 @@ public class GPXManager {
             }
         }
     }
+
+    var selectedBuffers: [GPXBuffer] {
+        allBuffers.values.filter { selectedBufferIDs.contains($0.id) }
+    }
+
+    // MARK: - PolylineDic
+
+    private var polylineDic: [MKPolyline: GPXBuffer] = [:]
+
+    // MARK: - Status
+
+    var loading = false
+
+    // MARK: - Init
+
+    @ObservationIgnored private var context: BrowserContext
+
+    @ObservationIgnored weak var mapView: MKMapView?
+    @ObservationIgnored weak var undoManager: UndoManager?
 
     init(context: BrowserContext) {
         self.context = context
@@ -116,16 +134,16 @@ public class GPXManager {
         }
     }
 
-    public func removeSelectedBuffers() {
+    func removeSelectedBuffers() {
         guard !selectedBufferIDs.isEmpty else { return }
-        let buffers = findSelectedBuffers()
+        let buffers = selectedBuffers
         selectedBufferIDs.removeAll()
         removeBuffers(buffers)
     }
 
     // MARK: - Polyline
 
-    public func buffer(from polyline: MKPolyline) -> GPXBuffer? {
+    func buffer(from polyline: MKPolyline) -> GPXBuffer? {
         return _polylineDic[polyline]
     }
 
@@ -177,7 +195,7 @@ public class GPXManager {
     }
 
     func importFiles(from urls: [URL]) async {
-        context.loading += 1
+        loading = true
 
         let start = DispatchTime.now()
 
@@ -192,7 +210,7 @@ public class GPXManager {
         let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
         logger.info("import: \(timeInterval) seconds")
 
-        context.loading -= 1
+        loading = false
         zoomToAllBuffers()
     }
 
@@ -205,7 +223,7 @@ public class GPXManager {
 
     func copyToClipboard() {
         var gpxCopies: [GPXFile] = []
-        for buffer in findSelectedBuffers() {
+        for buffer in selectedBuffers {
             gpxCopies.append(buffer.gpx)
         }
         Clipboard.shared.gpxCopies = gpxCopies
@@ -222,27 +240,23 @@ public class GPXManager {
 
     // MARK: - Select
 
-    public func findSelectedBuffers() -> [GPXBuffer] {
-        allBuffers.values.filter { selectedBufferIDs.contains($0.id) }
-    }
-
-    public func selectBuffer(_ buffer: GPXBuffer) {
+    func selectBuffer(_ buffer: GPXBuffer) {
         selectedBufferIDs.insert(buffer.id)
     }
 
-    public func deselectBuffer(_ buffer: GPXBuffer) {
+    func deselectBuffer(_ buffer: GPXBuffer) {
         selectedBufferIDs.remove(buffer.id)
     }
 
-    public func selectAllBuffers() {
+    func selectAllBuffers() {
         selectedBufferIDs = Set(allBuffers.keys)
     }
 
-    public func deselectAllBuffers() {
+    func deselectAllBuffers() {
         selectedBufferIDs = []
     }
 
-    public func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    func beginSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
             if buffer.isSelected {
                 deselectAllBuffers()
@@ -255,7 +269,7 @@ public class GPXManager {
         }
     }
 
-    public func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
+    func toggleSelection(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) {
         if let buffer = nearestBuffer(at: mapPoint, with: tolerance) {
             if buffer.isSelected {
                 deselectBuffer(buffer)
@@ -265,7 +279,7 @@ public class GPXManager {
         }
     }
 
-    public func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
+    func nearestBuffer(at mapPoint: MKMapPoint, with tolerance: CLLocationDistance) -> GPXBuffer? {
         let polyline = self.nearestPolyline(at: mapPoint, with: tolerance)
         return polyline.flatMap { _polylineDic[$0] }
     }
@@ -351,7 +365,7 @@ public class GPXManager {
         guard let mapView else { return }
         var zoomRect = MKMapRect.null
 
-        for buffer in findSelectedBuffers() {
+        for buffer in selectedBuffers {
             for polyline in buffer.polylines {
                 zoomRect = zoomRect.union(polyline.boundingMapRect)
             }

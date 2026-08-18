@@ -10,18 +10,18 @@
 
 import Foundation
 
-public nonisolated struct GPXParser {
+nonisolated struct GPXParser {
 
     typealias XMLNode = BasicXMLParser.XMLNode
 
-    public init() {}
+    init() {}
     
-    public func parse(contentOf url: URL) throws -> GPXFile {
+    func parse(contentOf url: URL) throws -> GPXFile {
         let data = try Data(contentsOf: url)
         return try parse(url: url, data: data)
     }
 
-    public func parse(url: URL, data: Data) throws -> GPXFile {
+    func parse(url: URL, data: Data) throws -> GPXFile {
         let root = try BasicXMLParser().parse(data: data)
         return parse(url: url, rootNode: root)
     }

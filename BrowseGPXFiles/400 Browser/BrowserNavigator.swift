@@ -21,7 +21,7 @@ struct BrowserNavigator: View {
             GPXMapContainer()
         }
         .overlay {
-            if browser.context.loading > 0 {
+            if browser.manager.loading {
                 ProgressOverlay(message: "")
             }
         }

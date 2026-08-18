@@ -8,14 +8,14 @@
 import Foundation
 import MapKit
 
-public nonisolated enum GPXUtility {
+nonisolated enum GPXUtility {
 
-    public static func makeData(from gpx: GPXFile) throws -> Data {
+    static func makeData(from gpx: GPXFile) throws -> Data {
         let xmlString = GPXExporter(gpx).makeXMLString()
         return Data(xmlString.utf8)
     }
 
-    public static func makeGPXSegment(from polyline: MKPolyline) -> GPXSegment {
+    static func makeGPXSegment(from polyline: MKPolyline) -> GPXSegment {
         var segment = GPXSegment()
         let count = polyline.pointCount
         let pointer = polyline.points()
@@ -27,7 +27,7 @@ public nonisolated enum GPXUtility {
         return segment
     }
 
-    public static func makeGPXTracks(from polylines: Set<MKPolyline>) -> [GPXTrack] {
+    static func makeGPXTracks(from polylines: Set<MKPolyline>) -> [GPXTrack] {
         var tracks = [GPXTrack]()
         for polyline in polylines {
             var track = GPXTrack()
@@ -38,14 +38,14 @@ public nonisolated enum GPXUtility {
         return tracks
     }
 
-    public static func makePolyline(from gpxSegment: GPXSegment) -> MKPolyline {
+    static func makePolyline(from gpxSegment: GPXSegment) -> MKPolyline {
         let points = gpxSegment.points.map {
             CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
         }
         return MKPolyline(coordinates: points, count: points.count)
     }
 
-//    public static func makePolylines(from gpxData: Data) throws -> [MKPolyline] {
+//    static func makePolylines(from gpxData: Data) throws -> [MKPolyline] {
 //        var polylines: [MKPolyline] = []
 //        let gpx = try GPXUtility.makeGPX(from: gpxData)
 //        for track in gpx.tracks {
@@ -56,7 +56,7 @@ public nonisolated enum GPXUtility {
 //        return polylines
 //    }
 
-//    public static func makePolylines(from urls: [URL]) async throws -> [MKPolyline] {
+//    static func makePolylines(from urls: [URL]) async throws -> [MKPolyline] {
 //        var polylines: [MKPolyline] = []
 //        let items = try FileURLCollector().collectRecursively(from: urls)
 //        for url in items {
@@ -70,7 +70,7 @@ public nonisolated enum GPXUtility {
 //        return polylines
 //    }
 
-    public static func calcDistance(from point: MKMapPoint, to polyline: MKPolyline) -> CLLocationDistance {
+    static func calcDistance(from point: MKMapPoint, to polyline: MKPolyline) -> CLLocationDistance {
         var minDistance: CLLocationDistance = .greatestFiniteMagnitude
 
         let points = polyline.points()
@@ -85,7 +85,7 @@ public nonisolated enum GPXUtility {
         return minDistance
     }
 
-    public static func calcDistance(from point: MKMapPoint, to line: MKMapLine) -> CLLocationDistance {
+    static func calcDistance(from point: MKMapPoint, to line: MKMapLine) -> CLLocationDistance {
         let x0 = point.x
         let y0 = point.y
         let start = line.start
@@ -121,7 +121,7 @@ public nonisolated enum GPXUtility {
 
 }
 
-public struct MKMapLine: Sendable {
+struct MKMapLine: Sendable {
     var start: MKMapPoint
     var end: MKMapPoint
 }

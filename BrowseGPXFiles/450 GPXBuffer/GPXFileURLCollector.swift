@@ -8,10 +8,10 @@
 import Foundation
 import UniformTypeIdentifiers
 
-nonisolated public struct GPXFileURLCollector {
-    public init() {}
+nonisolated struct GPXFileURLCollector {
+    init() {}
     
-    public func collectRecursively(from url: URL) throws -> [URL] {
+    func collectRecursively(from url: URL) throws -> [URL] {
         let fileManager = FileManager.default
         var results: [URL] = []
 

@@ -9,16 +9,16 @@ import Foundation
 
 // 참고 https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/GPXExporter.swift
 
-public nonisolated struct GPXExporter {
+nonisolated struct GPXExporter {
     let gpx: GPXFile
     let creator: String
 
-    public init(_ gpx: GPXFile, creator: String = "BrowseGPXFiles") {
+    init(_ gpx: GPXFile, creator: String = "BrowseGPXFiles") {
         self.gpx = gpx
         self.creator = creator
     }
     
-    public func makeXMLString() -> String {
+    func makeXMLString() -> String {
         var content = ""
         content += makeMetadataTag()
         content += makeTrackTags(gpx.tracks)

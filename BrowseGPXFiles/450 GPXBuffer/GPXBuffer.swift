@@ -10,17 +10,17 @@ import UniformTypeIdentifiers
 import MapKit
 
 @Observable
-nonisolated public final class GPXBuffer: Identifiable, Hashable {
-    public var url: URL { gpx.url }
-    public var name: String { gpx.name }
-    public var id: URL { gpx.url }
+nonisolated final class GPXBuffer: Identifiable, Hashable {
+    var url: URL { gpx.url }
+    var name: String { gpx.name }
+    var id: URL { gpx.url }
 
-    public private(set) var gpx: GPXFile
+    private(set) var gpx: GPXFile
 
-    public private(set) var polylines: [MKPolyline]
-    public var isSelected = false
+    private(set) var polylines: [MKPolyline]
+    var isSelected = false
     
-    public init(gpx: GPXFile) {
+    init(gpx: GPXFile) {
         self.gpx = gpx
 
         var polylines: [MKPolyline] = []
@@ -33,18 +33,18 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
         self.polylines = polylines
     }
 
-    public convenience init(contentOf url: URL) throws {
+    convenience init(contentOf url: URL) throws {
         let gpx = try GPXParser().parse(contentOf: url)
         self.init(gpx: gpx)
     }
 
     // MARK: - Equatable, Hashable
 
-    public static func == (lhs: GPXBuffer, rhs: GPXBuffer) -> Bool {
+    static func == (lhs: GPXBuffer, rhs: GPXBuffer) -> Bool {
         return lhs.id == rhs.id
     }
 
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }

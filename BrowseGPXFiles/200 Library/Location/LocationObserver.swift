@@ -9,34 +9,34 @@ import Foundation
 import CoreLocation
 import Combine
 
-public class LocationObserver: NSObject, ObservableObject {
+class LocationObserver: NSObject, ObservableObject {
 
     private var manager: CLLocationManager
     
-    @Published public private(set) var currentLocation: CLLocation?
-    @Published public private(set) var authorizationStatus: CLAuthorizationStatus
-    @Published public private(set) var error: Error?
+    @Published private(set) var currentLocation: CLLocation?
+    @Published private(set) var authorizationStatus: CLAuthorizationStatus
+    @Published private(set) var error: Error?
     
-    public init(manager: CLLocationManager = CLLocationManager()) {
+    init(manager: CLLocationManager = CLLocationManager()) {
         self.manager = manager
         self.authorizationStatus = manager.authorizationStatus
         super.init()
         manager.delegate = self
     }
     
-    public func requestAuthorization() {
+    func requestAuthorization() {
         manager.requestWhenInUseAuthorization()
     }
     
-    public func requestLocation() {
+    func requestLocation() {
         manager.requestLocation()
     }
 
-    public func startMonitoringLocation() {
+    func startMonitoringLocation() {
         manager.startUpdatingLocation()
     }
     
-    public func stopMonitoringLocation() {
+    func stopMonitoringLocation() {
         manager.stopUpdatingLocation()
     }
 
@@ -44,15 +44,15 @@ public class LocationObserver: NSObject, ObservableObject {
 
 extension LocationObserver: CLLocationManagerDelegate {
 
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         self.authorizationStatus = status
     }
     
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.currentLocation = locations.last
     }
     
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.error = error
     }
     

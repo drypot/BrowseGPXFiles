@@ -10,19 +10,19 @@
 
 import Foundation
 
-public nonisolated final class BasicXMLParser: NSObject, XMLParserDelegate {
+nonisolated final class BasicXMLParser: NSObject, XMLParserDelegate {
 
     enum XMLError: Swift.Error, Equatable {
         case parsingError(Int)
     }
 
-    public struct XMLNode {
-        public var name: String
-        public var attributes:[String: String]
-        public var content: String
-        public var children: [XMLNode]
+    struct XMLNode {
+        var name: String
+        var attributes:[String: String]
+        var content: String
+        var children: [XMLNode]
 
-        public init(name: String = "", attributes: [String : String] = [:], content: String = "", children: [XMLNode] = []) {
+        init(name: String = "", attributes: [String : String] = [:], content: String = "", children: [XMLNode] = []) {
             self.name = name
             self.attributes = attributes
             self.content = content
@@ -32,12 +32,12 @@ public nonisolated final class BasicXMLParser: NSObject, XMLParserDelegate {
 
     private var stack = [XMLNode()]
 
-    public func parse(contentOf url: URL) throws -> XMLNode {
+    func parse(contentOf url: URL) throws -> XMLNode {
         let data = try Data(contentsOf: url)
         return try parse(data: data)
     }
     
-    public func parse(data: Data) throws -> XMLNode {
+    func parse(data: Data) throws -> XMLNode {
         let parser = XMLParser(data: data)
         parser.delegate = self
         let result = autoreleasepool {
@@ -50,23 +50,23 @@ public nonisolated final class BasicXMLParser: NSObject, XMLParserDelegate {
         return root
     }
     
-    public func parser(_: XMLParser, didStartElement elementName: String, namespaceURI _: String?,
+    func parser(_: XMLParser, didStartElement elementName: String, namespaceURI _: String?,
                 qualifiedName _: String?, attributes attributeDict: [String: String] = [:]) {
         let newNode = XMLNode(name: elementName, attributes: attributeDict)
         stack.append(newNode)
     }
     
-    public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?,
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?,
                 qualifiedName qName: String?) {
         stack[stack.count - 2].children.append(stack.last!)
         stack.removeLast()
     }
     
-    public func parser(_ parser: XMLParser, foundCharacters string: String ) {
+    func parser(_ parser: XMLParser, foundCharacters string: String ) {
         stack[stack.count - 1].content += string.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    public func parser(_ parser: XMLParser, parseErrorOccurred parseError: Swift.Error ) {
+    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Swift.Error ) {
         print(parseError.localizedDescription)
     }
     

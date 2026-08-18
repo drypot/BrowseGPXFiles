@@ -15,10 +15,6 @@ final class BrowserContext {
     let id = UUID()
     weak var window: NSWindow?
 
-    // MARK: - Status
-
-    var loading = 0
-
     // MARK: - Alert
 
     var alertMessage: String = ""

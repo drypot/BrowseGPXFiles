@@ -86,7 +86,7 @@ final class GPXMapController: NSViewController {
 }
 
 extension GPXMapController: MKMapViewDelegate {
-    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let polyline = overlay as? MKPolyline {
             if let buffer = bufferManager.buffer(from: polyline) {
                 let renderer = MKPolylineRenderer(polyline: polyline)

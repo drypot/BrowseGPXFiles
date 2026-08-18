@@ -8,17 +8,17 @@
 import Foundation
 import os
 
-public nonisolated struct SimpleLogger<T>: Sendable where T: Sendable {
+nonisolated struct SimpleLogger<T>: Sendable where T: Sendable {
 
     private let _log = OSAllocatedUnfairLock(initialState: [T]())
 
-    public init() { }
+    init() { }
 
-    public func log(_ value: T) {
+    func log(_ value: T) {
         _log.withLock { $0.append(value) }
     }
 
-    public func result() -> [T] {
+    func result() -> [T] {
         _log.withLock { $0 }
     }
     

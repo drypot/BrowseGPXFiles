@@ -14,98 +14,98 @@ import CoreTransferable
 // https://www.topografix.com/GPX/1/1/
 // https://github.com/mmllr/GPXKit/blob/main/Sources/GPXKit/Coordinate.swift
 
-public nonisolated struct GPXFile: Codable, Sendable, Transferable {
-    public var url: URL
-    public var name: String
+nonisolated struct GPXFile: Codable, Sendable, Transferable {
+    var url: URL
+    var name: String
 
-    public var creator: String = ""
-    public var version: String = ""
+    var creator: String = ""
+    var version: String = ""
 
-    public var metadata: GPXMetadata = .init()
-    public var waypoints: [GPXWaypoint] = []
-    //public var routes: [GPXRoute]
-    public var tracks: [GPXTrack] = []
+    var metadata: GPXMetadata = .init()
+    var waypoints: [GPXWaypoint] = []
+    //var routes: [GPXRoute]
+    var tracks: [GPXTrack] = []
 
-    public init(url: URL) {
+    init(url: URL) {
         self.url = url
         self.name = url.lastPathComponent
     }
 
-    public static var transferRepresentation: some TransferRepresentation {
+    static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .gpxInternal)
     }
 }
 
-public nonisolated struct GPXMetadata: Codable, Sendable {
-    public var name: String = ""
-    public var description: String = ""
-    //public var author
-    //public var copyright
-    //public var link
-    //public var time
-    //public var keywords: String?
-    //public var bounds:
+nonisolated struct GPXMetadata: Codable, Sendable {
+    var name: String = ""
+    var description: String = ""
+    //var author
+    //var copyright
+    //var link
+    //var time
+    //var keywords: String?
+    //var bounds:
 
-    public init() {}
+    init() {}
 }
 
-public nonisolated struct GPXWaypoint: Codable, Sendable {
-    public var point: GPXPoint = GPXPoint()
+nonisolated struct GPXWaypoint: Codable, Sendable {
+    var point: GPXPoint = GPXPoint()
 
-    //public var time
-    //public var magvar
-    //public var geoidheight
+    //var time
+    //var magvar
+    //var geoidheight
 
-    public var name: String = ""
-    public var comment: String = ""
-    public var description: String = ""
-    //public var source
-    //public var link
-    public var symbol: String = ""
-    public var type: String = ""
+    var name: String = ""
+    var comment: String = ""
+    var description: String = ""
+    //var source
+    //var link
+    var symbol: String = ""
+    var type: String = ""
 
-    //public var fix
-    //public var satellites
-    //public var hdop
-    //public var vdop
-    //public var pdop
-    //public var ageofdgpsdata
-    //public var dgpsid
+    //var fix
+    //var satellites
+    //var hdop
+    //var vdop
+    //var pdop
+    //var ageofdgpsdata
+    //var dgpsid
 
-    public init() {}
+    init() {}
 }
 
-public nonisolated struct GPXTrack: Codable, Sendable {
-    public var name: String = ""
-    public var comment: String = ""
-    public var description: String = ""
-    //public var source: String?
-    //public var link
-    //public var number: Int?
-    //public var type: String?
-    public var segments: [GPXSegment] = []
+nonisolated struct GPXTrack: Codable, Sendable {
+    var name: String = ""
+    var comment: String = ""
+    var description: String = ""
+    //var source: String?
+    //var link
+    //var number: Int?
+    //var type: String?
+    var segments: [GPXSegment] = []
 
-    public init() {}
+    init() {}
 }
 
-public nonisolated struct GPXSegment: Codable, Sendable {
-    public var points: [GPXPoint] = []
+nonisolated struct GPXSegment: Codable, Sendable {
+    var points: [GPXPoint] = []
 
-    public init() {}
+    init() {}
 }
 
-public nonisolated struct GPXPoint: Codable, Sendable {
-    public var latitude = 0.0
-    public var longitude = 0.0
-    public var elevation = 0.0
+nonisolated struct GPXPoint: Codable, Sendable {
+    var latitude = 0.0
+    var longitude = 0.0
+    var elevation = 0.0
 
-    public init(latitude: Double = 0.0, longitude: Double = 0.0, elevation: Double = 0.0) {
+    init(latitude: Double = 0.0, longitude: Double = 0.0, elevation: Double = 0.0) {
         self.latitude = latitude
         self.longitude = longitude
         self.elevation = elevation
     }
     
-    public func almostEqual(_ target: Self) -> Bool {
+    func almostEqual(_ target: Self) -> Bool {
         (self.latitude - target.latitude).magnitude < 0.000001 &&
         (self.longitude - target.longitude).magnitude < 0.000001 &&
         (self.elevation - target.elevation).magnitude < 0.00001

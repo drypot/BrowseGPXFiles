@@ -15,7 +15,7 @@ import MapKit
 //        // 위치 한 번 받고 멈춤
 //        locationManager.stopUpdatingLocation()
 //
-//        if bufferManager.sortedBuffers.isEmpty == true {
+//        if bufferManager.filteredBuffers.isEmpty == true {
 //            let region = MKCoordinateRegion(
 //                center: location.coordinate,
 //                latitudinalMeters: 50_000,
