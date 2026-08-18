@@ -57,20 +57,20 @@ struct BrowserCommands: Commands {
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         CommandGroup(after: .toolbar) {
-            // Button("Zoom In", systemImage: "plus.magnifyingglass") {
-            //     performAction?(.zoomIn)
-            // }
-            // .keyboardShortcut("+", modifiers: .command)
+//             Button("Zoom In", systemImage: "plus.magnifyingglass") {
+//                 performAction?(.zoomIn)
+//             }
+//             .keyboardShortcut("+", modifiers: .command)
+//
+//             Button("Zoom Out", systemImage: "minus.magnifyingglass") {
+//                 performAction?(.zoomOut)
+//             }
+//             .keyboardShortcut("-", modifiers: .command)
 
-            // Button("Zoom Out", systemImage: "minus.magnifyingglass") {
-            //     performAction?(.zoomOut)
-            // }
-            // .keyboardShortcut("-", modifiers: .command)
-
-            // Button("Zoom to Fit", systemImage: "viewfinder") {
-            //     performAction?(.zoomToFit)
-            // }
-            // .keyboardShortcut("0", modifiers: .command)
+             Button("Zoom to Fit", systemImage: "viewfinder") {
+                 browser?.manager.zoom()
+             }
+             .keyboardShortcut("0", modifiers: .command)
         }
     }
 }

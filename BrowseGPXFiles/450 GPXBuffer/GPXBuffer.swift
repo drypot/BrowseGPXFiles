@@ -11,21 +11,18 @@ import MapKit
 
 @Observable
 nonisolated public final class GPXBuffer: Identifiable, Hashable {
-    public var name: String { gpx.name }
     public var url: URL { gpx.url }
-
+    public var name: String { gpx.name }
     public var id: URL { gpx.url }
 
     public private(set) var gpx: GPXFile
+
     public private(set) var polylines: [MKPolyline]
     public var isSelected = false
     
-    public init(gpx: GPXFile, polylines: [MKPolyline]) {
+    public init(gpx: GPXFile) {
         self.gpx = gpx
-        self.polylines = polylines
-    }
 
-    public convenience init(gpx: GPXFile) {
         var polylines: [MKPolyline] = []
         for track in gpx.tracks {
             for segment in track.segments {
@@ -33,7 +30,7 @@ nonisolated public final class GPXBuffer: Identifiable, Hashable {
                 polylines.append(polyline)
             }
         }
-        self.init(gpx: gpx, polylines: polylines)
+        self.polylines = polylines
     }
 
     public convenience init(contentOf url: URL) throws {
