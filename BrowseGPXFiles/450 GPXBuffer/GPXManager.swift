@@ -59,7 +59,9 @@ class GPXManager {
                 }
                 if let buffer = allBuffers[id] {
                     buffer.isSelected = true
-                    updateStrokeColor(of: buffer)
+                    if let mapView {
+                        buffer.updatePolylines(on: mapView)
+                    }
                 }
             }
 
@@ -69,7 +71,9 @@ class GPXManager {
                 }
                 if let buffer = allBuffers[id] {
                     buffer.isSelected = false
-                    updateStrokeColor(of: buffer)
+                    if let mapView {
+                        buffer.updatePolylines(on: mapView)
+                    }
                 }
             }
         }
@@ -112,7 +116,7 @@ class GPXManager {
         }
         if let mapView {
             for buffer in buffers {
-                mapView.addOverlays(buffer.polylines)
+                buffer.addOverlays(on: mapView)
             }
         }
     }
@@ -129,7 +133,7 @@ class GPXManager {
         }
         if let mapView {
             for buffer in buffers {
-                mapView.removeOverlays(buffer.polylines)
+                buffer.removeOverlays(on: mapView)
             }
         }
     }
@@ -143,7 +147,7 @@ class GPXManager {
 
     // MARK: - Polyline
 
-    func buffer(from polyline: MKPolyline) -> GPXBuffer? {
+    func findBuffer(with polyline: MKPolyline) -> GPXBuffer? {
         return _polylineDic[polyline]
     }
 
@@ -179,7 +183,7 @@ class GPXManager {
                 if url.startAccessingSecurityScopedResource() {
                     securityScoped.append(url)
                 }
-                for url in try GPXFileURLCollector().collectRecursively(from: url) {
+                for url in try Self.collectURLRecursively(at: url) {
                     group.addTask(priority: .userInitiated) {
                         let buffer = try GPXBuffer(contentOf: url)
                         return Box(buffer: buffer)
@@ -194,17 +198,50 @@ class GPXManager {
         }
     }
 
+    nonisolated private static func collectURLRecursively(at url: URL) throws -> [URL] {
+        let fileManager = FileManager.default
+        let keys: [URLResourceKey] = [.isRegularFileKey, .isDirectoryKey, .contentTypeKey]
+        let keySet = Set(keys)
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles]
+
+        let values = try url.resourceValues(forKeys: keySet)
+
+        if values.isRegularFile == true {
+            if values.contentType?.conforms(to: .gpx) == true {
+                return [url]
+            }
+        }
+
+        if values.isDirectory == true {
+            guard let enumerator = fileManager.enumerator(at: url,
+                                                          includingPropertiesForKeys: keys,
+                                                          options: options) else { return [] }
+            var results: [URL] = []
+            for case let url as URL in enumerator {
+                try autoreleasepool {
+                    let values = try url.resourceValues(forKeys: keySet)
+                    if values.isRegularFile == true {
+                        if values.contentType?.conforms(to: .gpx) == true {
+                            results.append(url)
+                        }
+                    }
+                }
+            }
+            return results
+        }
+
+        return []
+    }
+
     func importFiles(from urls: [URL]) async {
         loading = true
 
         let start = DispatchTime.now()
-
         do {
             try await importFilesParallel(from: urls)
         } catch {
             logger.error("failed to import GPX files: \(error.localizedDescription)")
         }
-
         let end = DispatchTime.now()
         let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000 // 초 단위 변환
@@ -320,16 +357,6 @@ class GPXManager {
         }
         for buffer in buffers {
             selectBuffer(buffer)
-        }
-    }
-
-    // MARK: - MapView
-
-    func updateStrokeColor(of buffer: GPXBuffer) {
-        for polyline in buffer.polylines {
-            if let renderer = mapView?.renderer(for: polyline) as? MKPolylineRenderer {
-                renderer.strokeColor = buffer.isSelected ? .red : .blue
-            }
         }
     }
 

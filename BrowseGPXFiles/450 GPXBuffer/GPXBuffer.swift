@@ -38,6 +38,27 @@ nonisolated final class GPXBuffer: Identifiable, Hashable {
         self.init(gpx: gpx)
     }
 
+    // MARK: - MapView
+
+    @MainActor
+    func updatePolylines(on mapView: MKMapView) {
+        for polyline in polylines {
+            if let renderer = mapView.renderer(for: polyline) as? MKPolylineRenderer {
+                renderer.strokeColor = isSelected ? .red : .blue
+            }
+        }
+    }
+
+    @MainActor
+    func addOverlays(on mapView: MKMapView) {
+        mapView.addOverlays(polylines)
+    }
+
+    @MainActor
+    func removeOverlays(on mapView: MKMapView) {
+        mapView.removeOverlays(polylines)
+    }
+
     // MARK: - Equatable, Hashable
 
     static func == (lhs: GPXBuffer, rhs: GPXBuffer) -> Bool {

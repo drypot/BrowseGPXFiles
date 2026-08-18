@@ -88,7 +88,7 @@ final class GPXMapController: NSViewController {
 extension GPXMapController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if let polyline = overlay as? MKPolyline {
-            if let buffer = bufferManager.buffer(from: polyline) {
+            if let buffer = bufferManager.findBuffer(with: polyline) {
                 let renderer = MKPolylineRenderer(polyline: polyline)
                 if buffer.isSelected {
                     renderer.strokeColor = .red
