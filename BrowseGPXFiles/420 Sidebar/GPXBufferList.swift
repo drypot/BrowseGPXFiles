@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 struct GPXBufferList: View {
     @Environment(AppState.self) var app
-    @Environment(GPXManager.self) var manager
+    @Environment(GPXBufferManager.self) var manager
 
     var body: some View {
         @Bindable var manager = manager

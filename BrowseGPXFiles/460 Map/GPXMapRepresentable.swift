@@ -10,7 +10,7 @@ import MapKit
 
 struct GPXMapRepresentable: NSViewControllerRepresentable {
     @Environment(AppState.self) var app
-    @Environment(GPXManager.self) var manager
+    @Environment(GPXBufferManager.self) var manager
 
     func makeNSViewController(context: Context) -> GPXMapController {
         let controller = GPXMapController(app: app, manager: manager)

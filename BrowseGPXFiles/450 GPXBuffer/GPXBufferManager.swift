@@ -1,5 +1,5 @@
 //
-//  GPXManager.swift
+//  GPXBufferManager.swift
 //  MyLibrary
 //
 //  Created by Kyuhyun Park on 3/1/26.
@@ -11,7 +11,7 @@ import MapKit
 import OSLog
 
 @Observable
-class GPXManager {
+class GPXBufferManager {
     // MARK: - All Buffers
 
     private(set) var allBuffers: [GPXBuffer.ID: GPXBuffer] = [:] {

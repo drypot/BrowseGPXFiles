@@ -12,11 +12,11 @@ import OSLog
 final class BrowserState {
     @ObservationIgnored var app: AppState?
     @ObservationIgnored var context: BrowserContext
-    @ObservationIgnored var manager: GPXManager
+    @ObservationIgnored var manager: GPXBufferManager
 
     init() {
         context = BrowserContext()
-        manager = GPXManager(context: context)
+        manager = GPXBufferManager(context: context)
         logger.debug("init browser state:")
     }
 

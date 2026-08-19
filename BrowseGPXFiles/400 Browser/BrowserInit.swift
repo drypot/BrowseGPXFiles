@@ -10,7 +10,7 @@ import SwiftUI
 struct BrowserInit: ViewModifier {
     @Environment(AppState.self) var app
     @Environment(BrowserState.self) var browser
-    @Environment(GPXManager.self) var manager
+    @Environment(GPXBufferManager.self) var manager
     @Environment(\.undoManager) var undoManager
 
     func body(content: Content) -> some View {

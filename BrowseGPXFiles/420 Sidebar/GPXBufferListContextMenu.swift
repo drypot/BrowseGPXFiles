@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GPXBufferListContextMenu: View {
     @Environment(AppState.self) var app
-    @Environment(GPXManager.self) var manager
+    @Environment(GPXBufferManager.self) var manager
 
     var selection: Set<GPXBuffer.ID>
 
